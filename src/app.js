@@ -3,6 +3,7 @@ const http = require('http');
 const express = require('express');
 
 // local dependencies 
+const db = require('./db');
 const views = require('./routes/views');
 
 // initialize express app
