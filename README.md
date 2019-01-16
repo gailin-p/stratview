@@ -1,6 +1,7 @@
 # glnpease-wmkusters
 
-To start, run: 
+### To start, run: 
 
 npm install 
+
 npm start
