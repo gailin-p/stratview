@@ -11,6 +11,7 @@ const app = express();
 
 // set routes
 app.use('/', views);
+app.use('/static', express.static('public'));
 
 // 404 route
 app.use(function(req, res, next) {
