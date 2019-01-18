@@ -8,7 +8,7 @@ const Feature = require('./feature');
 const ColumnModelSchema = new mongoose.Schema({
     column_id: String, 
     creator_id: String,
-    search_keys: [Feature]
+    search_keys: [Feature.schema]
 });
 
 // compile model from schema

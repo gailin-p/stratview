@@ -1,0 +1,17 @@
+.in-table-select {
+    max-width: 99%;
+}
+
+.pt-3-half {
+    padding-top: 1.4rem;
+}
+
+.text-input {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.scroll {
+    max-height: 300px;
+    overflow-y: auto;
+}

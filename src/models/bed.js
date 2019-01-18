@@ -10,8 +10,8 @@ const BedModelSchema = new mongoose.Schema({
     column_id: String, 
     bed_start: Number, 
     bed_end: Number, 
-    grain_size: Grain, 
-    features: [Feature],
+    grain_size: Grain.schema, 
+    features: [Feature.schema],
 });
 
 // compile model from schema
