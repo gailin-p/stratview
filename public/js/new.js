@@ -1,8 +1,7 @@
 // Modeled off https://mdbootstrap.com/docs/jquery/tables/editable/#! 
+// Makes the add bed button clone a hidden row, makes the remove button remove a row
 function tableSetUp() {
     var $TABLE = $('#table');
-    var $BTN = $('#export-btn');
-    var $EXPORT = $('#export');
 
     $('#add-row').click(function () {
         var $clone = $TABLE.find('tr.hide').clone(true).removeClass('hide d-none');
@@ -14,37 +13,45 @@ function tableSetUp() {
     $('.table-remove').click(function () {
         $(this).parents('tr').detach();
     });
+}
 
-    // A few jQuery helpers for exporting only
-    jQuery.fn.pop = [].pop;
-    jQuery.fn.shift = [].shift;
+// Table reading code modeled off https://mdbootstrap.com/docs/jquery/tables/editable/#! 
+function saveColumn() {
+    console.log("save col")
+    // FIRST: create column 
+    const newCol = {
+        formation: document.getElementById('formation-name').value, 
+        column_id: document.getElementById('column-name').value,
+        description: document.getElementById('description').value,
+    }
 
-    $BTN.click(function () {
-        var $rows = $TABLE.find('tr:not(:hidden)');
-        var headers = [];
-        var data = [];
+    // NEXT: gather beds 
+    var $TABLE = $('#table');
+    var $rows = $TABLE.find('tr').not('.hide');
+    jQuery.fn.shift = [].shift; // to shift first row (headers) off $rows
+    $rows.shift(); 
+    var data = [];
 
-        // Get the headers (add special header logic here)
-        $($rows.shift()).find('th:not(:empty)').each(function () {
-            headers.push($(this).text().toLowerCase());
-        });
+    // Turn all existing rows into a loopable array
+    $rows.each(function () {
+        var $num = $(this).find('.number');
+        var $select = $(this).find('select');
+        var bed = {};
 
-        // Turn all existing rows into a loopable array
-        $rows.each(function () {
-            var $td = $(this).find('td');
-            var h = {};
+        bed["bed_start"] = $num.eq(0).text(); 
+        bed["bed_end"] = $num.eq(1).text(); 
+        bed["grain_size"] = $select.eq(0).val(); 
+        bed["features"] = $select.eq(1).val(); 
+        bed["column_id"] = newCol.column_id;
 
-            // Use the headers from earlier to name our hash keys
-            headers.forEach(function (header, i) {
-                h[header] = $td.eq(i).text();
-            });
-
-            data.push(h);
-        });
-
-        // Output the result
-        $EXPORT.text(JSON.stringify(data));
+        data.push(bed);
     });
+
+    newCol.beds = data;
+    post('/api/column', newCol); 
+
+    // TODO: Go to user home 
+    window.location.href = "/new"
 }
 
 function getFeatureOptions() {
@@ -70,3 +77,4 @@ function getFeatureOptions() {
 
 getFeatureOptions();
 tableSetUp();
+document.getElementById("save-col").addEventListener('click', saveColumn);

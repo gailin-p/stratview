@@ -1,17 +1,15 @@
 // import node module
 const mongoose = require('mongoose');
 
-// local dependency
-const Feature = require('./feature');
-const Grain = require('./grain')
-
 // define a schema
+// For type safety, grain_size and features should really be Grain.schema, Features.schema
+// But that's more work, so we just trust that the string will always be a grain or feature ID 
 const BedModelSchema = new mongoose.Schema({
     column_id: String, 
     bed_start: Number, 
     bed_end: Number, 
-    grain_size: Grain.schema, 
-    features: [Feature.schema],
+    grain_size: String, 
+    features: [String],
 });
 
 // compile model from schema

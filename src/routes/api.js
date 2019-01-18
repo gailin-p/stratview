@@ -40,49 +40,33 @@ router.get('/grain', function(req,res){
     }); 
 });
 
-// TODO TEMPORARY - just for saving features to db 
-// router.post('/feature', function(req, res){ 
-//     const newFeature = new Feature({
-//         'feature_id' : req.body.feature_id, 
-//         'description' : req.body.description,
-//     }); 
-
-//     newFeature.save(function(err, feature) {
-//         if (err) console.log(err); 
-//     }); 
-
-//     res.send({}); 
-// });
-
-// TODO TEMPORARY - just for saving grain size to db
-// router.get('/grain', function(req, res){ 
-//     const newGrain = new Grain({
-//         'grain_size_id': 'm',
-//         'description': "medium"
-//     }); 
-
-//     newGrain.save(function(err, feature) {
-//         if (err) console.log(err); 
-//     }); 
-
-//     res.send({}); 
-// });
-
-// TODO this is just innards from catbook 
-router.post('/column', function(req, res) {
-    // CODE TGT: Create a new story with the "content" parameter
-    // Question: Do we get content with req.body.content or req.query.content? 
+router.post('/column', function(req, res) { 
     // req.body because this is a post request
-    const newStory = new Story({
-        'creator_id': 'anonid',
-        'creator_name': 'Anonymous',
-        'content': req.body.content
+    for (i=0; i<req.body.beds.length; i++) {
+        const b = req.body.beds[i];
+        const newBed = new Bed({
+            bed_start: b.bed_start, 
+            bed_end: b.bed_end, 
+            grain_size: b.grain_size, 
+            features : b.features, 
+            column_id: b.column_id, 
+        });
+        newBed.save(function(err, bed){
+            if(err) console.log(err);
+        });
+    };
+
+    const newCol = new Column({
+        column_id: req.body.column_id, 
+        creator_id: "Anon", 
+        formation: req.body.formation, 
+        description: req.body.description, 
+        search_keys: [],
     });
-    // Save the story
-    newStory.save(function(err, story) {
-        if (err) console.log(err);
-    });
-    // Send an empty response
+    newCol.save(function(err, formation){
+        if(err) console.log(err); 
+    })
+    
     res.send({});
 });
 

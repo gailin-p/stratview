@@ -45,8 +45,8 @@
               </tr>
               <!-- This is our clonable table line -->
               <tr class="hide d-none">
-                <td class="pt-3-half col-2" contenteditable="true">0.0</td>
-                <td class="pt-3-half col-2" contenteditable="true">0.0</td>
+                <td class="pt-3-half col-2 number" contenteditable="true">0.0</td>
+                <td class="pt-3-half col-2 number" contenteditable="true">0.0</td>
                 <td class="pt-3-half col-3 grain" contenteditable="true">
                   <select class="in-table-select grain-select"></select>
                 </td>
@@ -59,11 +59,14 @@
               </tr>
             </table>
             <span class="table-add float-right mb-3 mr-2">
-              <button class="btn btn-outline-primary" id="add-row">Add bed</button>
+              <button class="btn btn-outline-secondary" id="add-row">Add bed</button>
             </span>
           </div>
         </div>
     </div>
+    <span class="float-right pt-3-half">
+      <button class="btn btn-outline-primary" id="save-col">Save column</button>
+    </span>
   </div>
 </body>
 <!-- For bootstrap-select (multiselect w/ search) -->
@@ -74,6 +77,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js"></script>
 <!-- Local scripts -->
 <script src="/static/js/api.js"></script>
+<script src="/static/js/navbar.js"></script>
 <script src="/static/js/new.js"></script>
 
 </html>
