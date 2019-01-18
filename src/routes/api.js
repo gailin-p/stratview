@@ -33,6 +33,13 @@ router.get('/feature', function(req,res){
     }); 
 });
 
+router.get('/grain', function(req,res){
+    // return all features 
+    Grain.find({}, function (err, grains){
+        res.send(grains);
+    }); 
+});
+
 // TODO TEMPORARY - just for saving features to db 
 // router.post('/feature', function(req, res){ 
 //     const newFeature = new Feature({
@@ -41,6 +48,20 @@ router.get('/feature', function(req,res){
 //     }); 
 
 //     newFeature.save(function(err, feature) {
+//         if (err) console.log(err); 
+//     }); 
+
+//     res.send({}); 
+// });
+
+// TODO TEMPORARY - just for saving grain size to db
+// router.get('/grain', function(req, res){ 
+//     const newGrain = new Grain({
+//         'grain_size_id': 'm',
+//         'description': "medium"
+//     }); 
+
+//     newGrain.save(function(err, feature) {
 //         if (err) console.log(err); 
 //     }); 
 

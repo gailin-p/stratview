@@ -35,9 +35,6 @@
       <h5 class="card-header text-center font-weight-bold text-uppercase py-4">Beds</h5>
         <div class="card-body">
           <div id="table" class="table-editable">
-            <span class="table-add float-right mb-3 mr-2">
-              <button class="btn btn-outline-primary" id="add-row">Add bed</button>
-            </span>
             <table class="table table-bordered table-responsive-md table-striped text-center">
               <tr class="d-flex">
                 <th class="text-center col-2">Bed start</th>
@@ -50,7 +47,9 @@
               <tr class="hide d-none">
                 <td class="pt-3-half col-2" contenteditable="true">0.0</td>
                 <td class="pt-3-half col-2" contenteditable="true">0.0</td>
-                <td class="pt-3-half col-3" contenteditable="true"></td>
+                <td class="pt-3-half col-3 grain" contenteditable="true">
+                  <select class="in-table-select grain-select"></select>
+                </td>
                 <td class="pt-3-half col-3 feature" contenteditable="true">
                   <select class="in-table-select feature-select" multiple></select>
                 </td>
@@ -59,6 +58,9 @@
                 </td>
               </tr>
             </table>
+            <span class="table-add float-right mb-3 mr-2">
+              <button class="btn btn-outline-primary" id="add-row">Add bed</button>
+            </span>
           </div>
         </div>
     </div>

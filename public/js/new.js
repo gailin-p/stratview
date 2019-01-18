@@ -48,14 +48,22 @@ function tableSetUp() {
 }
 
 function getFeatureOptions() {
-    // add features to dropdown 
-    const fSelect = document.getElementsByClassName("feature-select")[0]
-    
+    // add features to dropdowns 
+    const fSelect = document.getElementsByClassName("feature-select")[0];
     get('/api/feature', {}, function (features) {
         for (let i = 0; i < features.length; i++) {
             const featureElt = document.createElement('option'); 
             featureElt.innerHTML = features[i].feature_id;
             fSelect.appendChild(featureElt);
+        }
+    });
+
+    const gSelect = document.getElementsByClassName("grain-select")[0];
+    get('/api/grain', {}, function (grains) {
+        for (let i = 0; i < grains.length; i++) {
+            const grainElt = document.createElement('option'); 
+            grainElt.innerHTML = grains[i].grain_size_id;
+            gSelect.appendChild(grainElt);
         }
     });
 }
