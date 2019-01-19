@@ -13,10 +13,15 @@ const router = express.Router();
 
 // api endpoints
 
-// TODO: eventually will want to search for a tag here. 
 router.get('/column', function(req, res) {
-    Column.find({}, function(err, col) {
+    Column.find({column_id: req.query.column_id}, function(err, col) {
         res.send(col);
+    });
+});
+
+router.get('/columns', function(req, res) {
+    Column.find({}, function(err, cols) {
+        res.send(cols);
     });
 });
 

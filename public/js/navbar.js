@@ -10,7 +10,7 @@ function newNavbarItem(text, url) {
   
   function renderNavbar() {
     const navbarDiv = document.getElementById('nav-item-container');
-  
+    navbarDiv.appendChild(newNavbarItem('Home', '/'));
     navbarDiv.appendChild(newNavbarItem('New', '/new'));
   }
   
