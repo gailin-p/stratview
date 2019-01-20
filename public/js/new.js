@@ -17,7 +17,6 @@ function tableSetUp() {
 
 // Table reading code modeled off https://mdbootstrap.com/docs/jquery/tables/editable/#! 
 function saveColumn() {
-    console.log("save col")
     // FIRST: create column 
     const newCol = {
         formation: document.getElementById('formation-name').value, 
@@ -50,8 +49,7 @@ function saveColumn() {
     newCol.beds = data;
     post('/api/column', newCol); 
 
-    // TODO: Go to user home 
-    window.location.href = "/new"
+    window.location.href = "/" // go to user home
 }
 
 function getFeatureOptions() {

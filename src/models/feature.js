@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 // define a schema
 const FeatureModelSchema = new mongoose.Schema({
-    feature_id: String, 
+    feature_id: {type: String , unique: true, index: true}, 
     description: String,
 });
 

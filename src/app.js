@@ -7,6 +7,7 @@ const express = require('express');
 const db = require('./db');
 const views = require('./routes/views');
 const api = require('./routes/api');
+const util = require('./routes/util'); 
 
 // initialize express app
 const app = express();
@@ -18,6 +19,7 @@ app.use(bodyParser.json());
 // set routes
 app.use('/', views);
 app.use('/api', api);
+//app.use('/util', util)
 app.use('/static', express.static('public'));
 
 // 404 route

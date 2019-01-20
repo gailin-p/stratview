@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 // define a schema
 const GrainModelSchema = new mongoose.Schema({
-    grain_size_id: String, 
+    grain_size_id: {type: String , unique: true, index: true}, 
     description: String,
 });
 
