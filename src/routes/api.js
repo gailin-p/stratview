@@ -6,6 +6,7 @@ const Feature = require('../models/feature');
 const Grain = require('../models/grain');
 const Bed = require('../models/bed');
 const Column = require('../models/column');
+const SIndex = require('../search/index');
 
 // search 
 const {computeIndex} = require('../search/compute_index');
@@ -15,8 +16,35 @@ const router = express.Router();
 
 // api endpoints
 
+// on search query : 
+// - Get index for each feature in search 
+// - Combine frequencies for each column_id 
+// - Sort based on combined frequencies 
+// - Return list of {column_id: , feature1: feature2: ...}
 router.get('/search', function(req, res) {
-    res.send(search(req.query.search_features)); 
+    const featuresStr = req.query.search_features;
+    const features = featuresStr.split(',');
+
+    SIndex.find({ feature_id: { $in : features }  }, function(err, indices){
+        if (err) console.log(err);
+        
+        var values = new Map(); // map from column name -> measure of match quality
+        for (i=0; i< indices.length; i++){
+            const index = indices[i].frequency; 
+            index.forEach(function(value, key, map){
+                quality = values.has(key) ? values.get(key) + value : value
+                values.set(key, quality); 
+            });            
+        }
+        console.log(values);
+
+        var result = Array.from(values.keys());
+        result.sort(function (a, b) {
+            return values.get(b) - values.get(a);
+        })
+
+        res.send(result); 
+    });
 });
 
 router.get('/column', function(req, res) {

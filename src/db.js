@@ -4,7 +4,8 @@ const mongoose = require('mongoose');
 // TODO saving the srv with username/pw in plaintext is maybe not the best idea long term
 const mongoURL = "mongodb+srv://user:user@cluster0-iaei2.mongodb.net/test?retryWrites=true";
 const options = {
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    autoIndex: false // set this to true if creating or updating indices in schemas
 };
 mongoose.connect(mongoURL, options);
 mongoose.Promise = global.Promise;

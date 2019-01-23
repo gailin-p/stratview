@@ -18,22 +18,13 @@ function computeIndex(column_id, beds) {
         const bed = beds[i]; 
         for (f = 0; f<bed.features.length; f++){
             const feature = bed.features[f];
-            newCount = count.has(feature) ? count.get(feature) + 1 : 1; 
+            var newCount = count.has(feature) ? count.get(feature) + 1 : 1; 
             count.set(feature, newCount); 
         }
     }
 
     // Save to index 
     count.forEach(function(value, key, map){
-        // Index.find({feature_id: key}, function(err, indices){
-        //     if(err) console.log(err); 
-        //     if(indices.length != 1) console.log("ERROR: multiple indices for feature");
-            
-        //     index = indices[0] 
-        //     index.frequency.set(column.column_id, value/allBeds); 
-        //     index.save(); 
-        //     console.log('saved index for feature '+key + ', col '+column.column_id);
-        // }); 
         SIndex.update({ feature_id: key }, { $set: { ['frequency.'+column_id]: value/allBeds }}, function(err, raw){
             if (err) console.log(err);
         });
