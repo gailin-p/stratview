@@ -10,7 +10,6 @@ const SIndex = require('../search/index');
 
 // search 
 const {computeIndex} = require('../search/compute_index');
-const {search} = require('../search/search_query');
 
 const router = express.Router();
 
