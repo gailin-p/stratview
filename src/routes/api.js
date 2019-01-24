@@ -35,13 +35,13 @@ router.get('/search', function(req, res) {
                 values.set(key, quality); 
             });            
         }
-        console.log(values);
 
         var result = Array.from(values.keys());
         result.sort(function (a, b) {
             return values.get(b) - values.get(a);
         })
 
+        console.log(result); 
         res.send(result); 
     });
 });
@@ -57,6 +57,14 @@ router.get('/columns', function(req, res) {
         console.log(cols[0]);
         res.send(cols);
     });
+});
+
+router.get('/columns_by_ids', function(req, res){
+    const idsStr = req.query.column_ids; 
+    const ids = idsStr.split(','); 
+    Column.find({column_id: {$in: ids}}, function(err, cols){
+        res.send(cols); 
+    })
 });
 
 router.get('/beds', function(req, res) {
