@@ -15,4 +15,8 @@ router.get('/new', function(req, res, next) {
   res.sendFile('new.html', { root: 'src/views' });
 });
 
+router.get('/column', function(req, res, next) {
+  res.sendFile('column.html', { root: 'src/views' });
+});
+
 module.exports = router;

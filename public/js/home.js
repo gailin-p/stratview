@@ -11,4 +11,5 @@ function getColumns() {
     });
 }
 
+sessionStorage.setItem('mykey', "myvalue");
 getColumns();

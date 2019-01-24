@@ -3,7 +3,7 @@
 
 function columnDOMObject(columnJSON) {
     const card = document.createElement('div');
-    card.setAttribute('id', columnJSON._id);
+    card.setAttribute('id', columnJSON.column_id);
     card.className = 'card column';
   
     const cardBody = document.createElement('div');
@@ -14,7 +14,7 @@ function columnDOMObject(columnJSON) {
     creatorSpan.className = 'card-title';
     creatorSpan.innerHTML = columnJSON.column_id;
     // TODO Bill -- add link to column page 
-    //creatorSpan.setAttribute('href', '/u/profile?' + columnJSON.creator_id);
+    creatorSpan.setAttribute('href', '/column?' + columnJSON.column_id);
     cardBody.appendChild(creatorSpan);
   
     const contentSpan = document.createElement('p');
@@ -24,5 +24,3 @@ function columnDOMObject(columnJSON) {
   
     return card;
   }
-
-  
