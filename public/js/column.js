@@ -2,15 +2,15 @@
 // Tooltips modeled off http://bl.ocks.org/Caged/6476579 
 function bars(column_id) {
 
-    var margin = {top: 20, right: 30, bottom: 30, left: 60},
+    var margin = {top: 20, right: 30, bottom: 30, left: 30},
         width = 300 - margin.left - margin.right,
         height = 600 - margin.top - margin.bottom;
 
     var y = d3.scale.linear()
         .range([0, height]);
 
-    var x = d3.scale.linear()
-        .range([0, width]);
+    var x = d3.scale.ordinal()
+        .rangeRoundPoints([margin.left, width]); // This makes things with "0" size class show up
 
     var chart = d3.select(".chart")
         .attr("width", width + margin.left + margin.right)
@@ -23,7 +23,8 @@ function bars(column_id) {
         .attr('class', 'd3-tip')
         .offset([-10, 0])
         .html(function (d) {
-            return "<strong>Features:</strong> <span style='color:red'>" + d.features + "</span>";
+            return "<h5>" + d.bed_start + "m to " + d.bed_end + "m \n</h5>" +
+            "<span> Features: " + d.features + " " + d.grain_size + "</span>" ;
         })
         .direction('e')
         .offset([0, 7]);
@@ -32,35 +33,35 @@ function bars(column_id) {
             .scale(y)
             .orient("left");
 
+    var xAxis = d3.svg.axis()
+            .scale(x)
+            .orient("bottom");
+
     d3.select('svg').call(tip);
 
     get('/api/beds', { column_id: column_id }, function (data) {
     get('/api/grain', {}, function(grain){
-        // Map from grain name to size 
-        var grainMap = new Map(); 
-        grain.forEach(element => {
-            grainMap.set(element.grain_size_id, +element.size_class);
-        });
+        // Create discrete d3 scale for grain sizes 
+        grain.sort(function (g1, g2) {return g1.size_class - g2.size_class}); 
+        sorted_grains = grain.map(g => g.grain_size_id)
+        x.domain(sorted_grains);
 
         y.domain([d3.max(data, function (d) { return d.bed_end; }), 0]);
-        x.domain([0, d3.max(grain, function(g) { return g.size_class;})]);
-
-        console.log(data);
-        console.log(y(0));
-        console.log(y(2)); 
-        console.log(y(5));
 
         chart.append("g")
             .attr("class", "axis")
             .call(yAxis);
 
-        var bar = chart.selectAll(".bar")
-            .data(data)
-            .enter().append("g")
-            .attr("transform", function (d, i) { return "translate(0," + (y(d.bed_end)) + ")"; });
+        chart.append("g")
+            .attr("class", "axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
 
-        bar.append("rect")
-            .attr("width", function (d) {return x(grainMap.get(d.grain_size)); })
+        var bar = chart.selectAll("rect")
+            .data(data)
+            .enter().append("rect")
+            .attr('y', function (d) { return y(d.bed_end); })
+            .attr("width", function (d) {return x(d.grain_size); })
             .attr("height", function(d) {return y(d.bed_start) - y(d.bed_end)})
             .attr("class", function(d) {
                 // TODO different styling for different features  
@@ -71,12 +72,6 @@ function bars(column_id) {
             })
             .on('mouseover', tip.show)
             .on('mouseout', tip.hide);
-
-        bar.append("text")
-            .attr("x", function (d) { return x(grainMap.get(d.grain_size)) - 3; })
-            .attr("y",  function(d) {return (y(d.bed_start) - y(d.bed_end))/2})
-            .attr("dy", ".35em")
-            .text(function (d) { return d.bed_start; });
     })});
 }
 
