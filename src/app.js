@@ -2,6 +2,7 @@
 const http = require('http');
 const bodyParser = require('body-parser');
 const express = require('express');
+require('dotenv').config();
 
 // local dependencies 
 const db = require('./db');

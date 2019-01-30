@@ -2,7 +2,10 @@ const mongoose = require('mongoose');
 
 // setup mongoDB connection
 // TODO saving the srv with username/pw in plaintext is maybe not the best idea long term
-const mongoURL = "mongodb+srv://user:user@cluster0-iaei2.mongodb.net/test?retryWrites=true";
+const mongoURL = process.env.ATLAS_SRV;
+if (!mongoURL){
+    console.log("ERROR: Environment missing database SRV");
+}
 const options = {
     useNewUrlParser: true,
     autoIndex: false // set this to true if creating or updating indices in schemas
