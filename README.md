@@ -1,4 +1,4 @@
-# glnpease-wmkusters
+# StratView
 
 ### To start, run: 
 
