@@ -4,7 +4,6 @@ function getColumns() {
     const storiesDiv = document.getElementById('my-columns');
     get('/api/columns', {}, function(cols) {
       for (let i = 0; i < cols.length; i++) {
-        console.log(cols[i])
         const currentStory = cols[i];
         storiesDiv.prepend(columnDOMObject(currentStory));
       }

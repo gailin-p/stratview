@@ -19,7 +19,7 @@ app.use(bodyParser.json());
 // set routes
 app.use('/', views);
 app.use('/api', api);
-//app.use('/util', util)
+//app.use('/util', util) // database utilities. Not for the faint of heart. 
 app.use('/static', express.static('public'));
 
 // 404 route

@@ -54,7 +54,6 @@ router.get('/column', function(req, res) {
 
 router.get('/columns', function(req, res) {
     Column.find({}, function(err, cols) {
-        console.log(cols[0]);
         res.send(cols);
     });
 });
@@ -81,7 +80,7 @@ router.get('/feature', function(req,res){
 });
 
 router.get('/grain', function(req,res){
-    // return all features 
+    // return all grains 
     Grain.find({}, function (err, grains){
         res.send(grains);
     }); 

@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const GrainModelSchema = new mongoose.Schema({
     grain_size_id: {type: String , unique: true, index: true}, 
     description: String,
+    size_class: Number, 
 });
 
 // compile model from schema

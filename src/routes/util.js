@@ -6,6 +6,7 @@
 // -- updating indices 
 
 // DISABLED IN APP.JS
+// IRL this should be a set of upgrade scripts. 
 
 // dependencies
 const express = require('express');
@@ -59,76 +60,89 @@ router.get('/buildindex', function(req,res){
     })
 }) ;
 
-// // For putting grains into database. 
-// router.get('/putgrain', function(req,res){
-//     // cov, c, mi
-//     grain = new Grain({
-//         grain_size_id: "mi",
-//         description: '',
-//     })
+// For putting grains into database. 
+router.get('/putgrain', function (req, res) {
+    // Delete current grains 
+    Grain.deleteMany({}, function (err) {
+        if (err) console.log(err);
 
-//     grain.save(function(err, formation){
-//                 if(err) console.log(err); 
-//             })
+        // cov, c, mi
+        grains = ['vf', 'f', 'm', 'cov', 'c', 'mi']
+        sizes = [2, 3, 1, 0, 0, 4]
+        descriptions = ['very fine', 'fine', 'mud?', 'unknown', 'unknown', 'mid?']
 
-//     res.send({});
-// })
+        for (i = 0; i < grains.length; i++) {
+            grain = new Grain({
+                grain_size_id: grains[i],
+                description: descriptions[i],
+                size_class: sizes[i],
+            })
 
-// // For putting features into database. 
-// router.get('/putfeature', function(req,res){
-//     features = ['spr', 'al', '10 qtz sand', '20 qtz sand', 'icg', 'rip', '30 qtz sand', 'si', 'ss', 'vg']
+            grain.save(function (err, formation) {
+                if (err) console.log(err);
+            })
+        }
+    });
+
+    res.send({});
+})
+
+// For putting features into database. 
+router.get('/putfeature', function(req,res){
+    features = ['spr', 'al', '10 qtz sand', '20 qtz sand', 'icg', 'rip', '30 qtz sand', 'si', 'ss', 'vg']
     
-//     for (i=0; i<features.length; i++){
-//         feature = new Feature({
-//             feature_id: features[i],
-//             description: 'temp ' + features[i] + ' description',
-//         })
+    for (i=0; i<features.length; i++){
+        feature = new Feature({
+            feature_id: features[i],
+            description: 'temp ' + features[i] + ' description',
+        })
 
-//         feature.save(function(err, formation){
-//                     if(err) console.log(err); 
-//                 });
-//     }
+        feature.save(function(err, formation){
+                    if(err) console.log(err); 
+                });
+    }
 
-//     res.send({});
-// })
+    res.send({});
+})
 
-// For putting example columns into database. 
-// router.get('/omandat', function(req, res){
-//     bed_bottoms = 
-//     bed_tops = 
-//     grain = 
-//     features = 
+//For putting example columns into database. 
+router.get('/omandat', function(req, res){
+    // Fill in here with oman data from jupyter notebook 
+    bed_bottoms = 
+    bed_tops = 
+    grain = 
+    features = 
 
-//     col_name = ""
-//     formation = "oman"
-//     description = "Data from Kristin Bergmann"
+    col_name = ""
+    formation = "oman"
+    description = "Data from Kristin Bergmann"
 
-//     for (i=0; i<bed_bottoms.length; i++) {
-//         const newBed = new Bed({
-//             bed_start: bed_bottoms[i], 
-//             bed_end: bed_tops[i], 
-//             grain_size: grain[i], 
-//             features : features[i], 
-//             column_id: col_name, 
-//         });
-//         newBed.save(function(err, bed){
-//             if(err) console.log(err);
-//         });
-//     };
+    for (i=0; i<bed_bottoms.length; i++) {
+        const newBed = new Bed({
+            bed_start: bed_bottoms[i], 
+            bed_end: bed_tops[i], 
+            grain_size: grain[i], 
+            features : features[i], 
+            column_id: col_name, 
+        });
+        newBed.save(function(err, bed){
+            if(err) console.log(err);
+        });
+    };
 
-//     const newCol = new Column({
-//         column_id: col_name, 
-//         creator_id: "Anon", 
-//         formation: formation, 
-//         description: description, 
-//         search_keys: [],
-//     });
-//     newCol.save(function(err, formation){
-//         if(err) console.log(err); 
-//     })
+    const newCol = new Column({
+        column_id: col_name, 
+        creator_id: "Anon", 
+        formation: formation, 
+        description: description, 
+        search_keys: [],
+    });
+    newCol.save(function(err, formation){
+        if(err) console.log(err); 
+    })
     
-//     res.send({});
-// })
+    res.send({});
+})
 
 
 module.exports = router;
