@@ -9,8 +9,7 @@ const ColumnModelSchema = new mongoose.Schema({
     column_id: {type: String , unique: true, index: true}, 
     creator_id: String,
     formation: String, 
-    description: String, 
-    search_keys: [String]
+    description: String
 });
 
 // compile model from schema

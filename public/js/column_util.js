@@ -9,11 +9,28 @@ function columnDOMObject(columnJSON) {
     const cardBody = document.createElement('div');
     cardBody.className = 'card-body';
     card.appendChild(cardBody);
+
+    const cardFooter = document.createElement('div');
+    cardFooter.className = 'card-footer';
+    const checkBox = document.createElement('small');
+    checkBox.className ='form-check pad-left';
+    const check = document.createElement('input');
+    check.className ='form-check-input';
+    check.setAttribute('type', 'checkbox'); 
+    check.setAttribute('value', ''); 
+    check.setAttribute('id', 'check-'+columnJSON.column_id);
+    const label = document.createElement('label'); 
+    label.className ='form-check-label text-muted'; 
+    label.setAttribute('for', 'check-'+columnJSON.column_id);
+    label.innerHTML ='Visualize';
+    checkBox.appendChild(check); 
+    checkBox.appendChild(label);
+    cardFooter.appendChild(checkBox);
+    card.appendChild(cardFooter);
   
     const creatorSpan = document.createElement('a');
     creatorSpan.className = 'card-title';
     creatorSpan.innerHTML = columnJSON.column_id;
-    // TODO Bill -- add link to column page 
     creatorSpan.setAttribute('href', '/column?' + columnJSON.column_id);
     cardBody.appendChild(creatorSpan);
   
