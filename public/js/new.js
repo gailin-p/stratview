@@ -52,6 +52,7 @@ function saveColumn() {
     window.location.href = "/" // go to user home
 }
 
+// Can't condense these calls into a function because return types are different 
 function getFeatureOptions() {
     // add features to dropdowns 
     const fSelect = document.getElementsByClassName("feature-select")[0];
@@ -63,6 +64,7 @@ function getFeatureOptions() {
         }
     });
 
+    // add grains to grain size dropdown 
     const gSelect = document.getElementsByClassName("grain-select")[0];
     get('/api/grain', {}, function (grains) {
         for (let i = 0; i < grains.length; i++) {
@@ -71,8 +73,42 @@ function getFeatureOptions() {
             gSelect.appendChild(grainElt);
         }
     });
+
+    // add chem types to chem type dropdown 
+    const cSelect = document.getElementById("chem-select");
+    get('/api/chemtype', {}, function(chems){
+        for (let i=0; i<chems.length; i++){
+            const chemElt = document.createElement('option'); 
+            chemElt.innerHTML = chems[i].chem_id;
+            console.log(chemElt)
+            cSelect.appendChild(chemElt);
+        }
+    });
+    //$('#chem-select').selectpicker();
+}
+
+// Return a DOM object for chemical data entry 
+function ChemDataEntryDOM(chemtype) {
+    const card = document.createElement('div');
+    card.setAttribute('id', chemtype);
+    card.className = 'card column';
+  
+    const cardBody = document.createElement('div');
+    cardBody.className = 'card-body';
+    cardBody.innerHTML = chemtype;
+    card.appendChild(cardBody);
+
+
+    // TODO  data entry here 
+  
+    return card;
+}
+
+function onNewChem() {
+    $('#chem-collapse').append(ChemDataEntryDOM($('#chem-select').val()))
 }
 
 getFeatureOptions();
 tableSetUp();
+document.getElementById("chem-add").addEventListener('click', onNewChem);
 document.getElementById("save-col").addEventListener('click', saveColumn);

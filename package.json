@@ -6,7 +6,7 @@
     "author": "Bill Kusters, Gailin Pease",
     "license": "MIT",
     "scripts": {
-        "start": "node src/app.js"
+        "start": "nodemon src/app.js"
     },
     "dependencies": {
         "dotenv": "^6.2.0",

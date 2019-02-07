@@ -7,6 +7,8 @@ const Grain = require('../models/grain');
 const Bed = require('../models/bed');
 const Column = require('../models/column');
 const SIndex = require('../search/index');
+const ChemType = require('../models/chem_type');
+const ChemData = require('../models/chem');
 
 // search 
 const {computeIndex} = require('../search/compute_index');
@@ -76,6 +78,13 @@ router.get('/feature', function(req,res){
     // return all features 
     Feature.find({}, function (err, features){
         res.send(features);
+    }); 
+});
+
+router.get('/chemtype', function(req,res){
+    // return all features 
+    ChemType.find({}, function (err, chem){
+        res.send(chem);
     }); 
 });
 

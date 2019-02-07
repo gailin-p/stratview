@@ -15,11 +15,6 @@
     margin-bottom: 5px;
 }
 
-.scroll {
-    max-height: 300px;
-    overflow-y: auto;
-}
-
 .column {
 	margin: 10px 0px;
 }

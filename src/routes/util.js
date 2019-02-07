@@ -16,6 +16,8 @@ const Feature = require('../models/feature');
 const Grain = require('../models/grain');
 const Bed = require('../models/bed');
 const Column = require('../models/column');
+const ChemType = require('../models/chem_type');
+const ChemData = require('../models/chem');
 
 // search 
 const {computeIndex} = require('../search/compute_index');
@@ -88,22 +90,52 @@ router.get('/putgrain', function (req, res) {
 })
 
 // For putting features into database. 
-router.get('/putfeature', function(req,res){
-    features = ['spr', 'al', '10 qtz sand', '20 qtz sand', 'icg', 'rip', '30 qtz sand', 'si', 'ss', 'vg']
-    
-    for (i=0; i<features.length; i++){
-        feature = new Feature({
-            feature_id: features[i],
-            description: 'temp ' + features[i] + ' description',
-        })
+router.get('/putfeature', function (req, res) {
+    // Delete current grains 
+    Feature.deleteMany({}, function (err) {
+        if (err) console.log(err);
 
-        feature.save(function(err, formation){
-                    if(err) console.log(err); 
-                });
-    }
+        features = ['spr', 'al', '10 qtz sand', '20 qtz sand', 'icg', 'rip', '30 qtz sand', 'si', 'ss', 'vg']
 
-    res.send({});
-})
+        for (i = 0; i < features.length; i++) {
+            feature = new Feature({
+                feature_id: features[i],
+                description: 'temp ' + features[i] + ' description',
+            })
+
+            feature.save(function (err, formation) {
+                if (err) console.log(err);
+            });
+        }
+
+        res.send('Deleted feature types, replacing...');
+    });
+});
+
+// For putting chemical data types into database. 
+router.get('/putchemtype', function (req, res) {
+
+    // Delete current grains 
+    ChemType.deleteMany({}, function (err) {
+        if (err) console.log(err);
+
+        chem = ['13C', '18O', '34S', '34P', 'S']
+
+        for (i = 0; i < chem.length; i++) {
+            console.log('saving '+chem[i]);
+            new_chem = new ChemType({
+                chem_id: chem[i],
+                description: 'temporary ' + chem[i] + ' description',
+            })
+
+            new_chem.save(function (err, c) {
+                if (err) console.log(err);
+            });
+        }
+
+        res.send('Deleted chemical data types, now saving');
+    });
+});
 
 //For putting example columns into database. 
 router.get('/omandat', function(req, res){

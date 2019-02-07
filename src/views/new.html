@@ -17,7 +17,6 @@
     </div>
   </nav>
   <div class="container-fluid">
-    <h4 class="text-center font-weight-bold text-uppercase py-4">New Column</h4>
     <div class="row text-input" id="column-input">
       <div class="col-6">
       <input id="column-name" type="text" placeholder="Column name" class="form-control"></input></div>
@@ -31,9 +30,12 @@
     </div>
     <!-- table modeled off https://mdbootstrap.com/docs/jquery/tables/editable/#! -->
     <!-- Editable table -->
-    <div class="card scroll">
-      <h5 class="card-header text-center font-weight-bold text-uppercase py-4">Beds</h5>
-        <div class="card-body">
+    <button class="btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#data-collapse" aria-expanded="false" aria-controls="data-collapse">
+        Show beds
+    </button>
+    <div class="collapse" id="data-collapse">
+      <div class="row">
+        <div class="col-12">
           <div id="table" class="table-editable">
             <table class="table table-bordered table-responsive-md table-striped text-center">
               <tr class="d-flex">
@@ -47,11 +49,11 @@
               <tr class="hide d-none">
                 <td class="pt-3-half col-2 number" contenteditable="true">0.0</td>
                 <td class="pt-3-half col-2 number" contenteditable="true">0.0</td>
-                <td class="pt-3-half col-3 grain" contenteditable="true">
-                  <select class="in-table-select grain-select"></select>
+                <td class="pt-3-half col-3 grain" contenteditable="false">
+                  <select class="in-table-select grain-select" data-size=3></select>
                 </td>
-                <td class="pt-3-half col-3 feature" contenteditable="true">
-                  <select class="in-table-select feature-select" multiple></select>
+                <td class="pt-3-half col-3 feature" contenteditable="false">
+                  <select class="in-table-select feature-select" multiple data-live-search=true data-size=3></select>
                 </td>
                 <td class="col-2">
                   <span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0">Remove</button></span>
@@ -61,11 +63,25 @@
             <span class="table-add float-right mb-3 mr-2">
               <button class="btn btn-outline-secondary" id="add-row">Add bed</button>
             </span>
-          </div>
         </div>
+      </div>
     </div>
+    </div>
+  <div class="row">
+    <div class="col-12">
+  <button class="btn btn-outline-primary text-input" type="button" data-toggle="collapse" data-target="#chem-collapse" aria-expanded="false" aria-controls="chem-collapse">
+      Show chemical data
+  </button></div>  </div>
+  <div class="collapse" id="chem-collapse">
+    <div class="row pt-3-half">
+      <div class="col-12">
+      <select id="chem-select" class="selectpicker"></select>
+      <button class="btn btn-outline-secondary" id="chem-add">Add chemical data</button>
+    </div>
+  </div>
+  </div> 
     <span class="float-right pt-3-half">
-      <button class="btn btn-outline-primary" id="save-col">Save column</button>
+      <button class="btn btn-primary" id="save-col">Save column</button>
     </span>
   </div>
 </body>
