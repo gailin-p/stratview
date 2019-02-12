@@ -2,6 +2,7 @@ function getSearchOptions() {
     // add features to dropdowns 
     const fSelect = document.getElementById("feature-opt");
     get('/api/feature', {}, function (features) {
+        console.log(features);
         for (let i = 0; i < features.length; i++) {
             const featureElt = document.createElement('option'); 
             featureElt.setAttribute("data-subtext", features[i].description);

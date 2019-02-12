@@ -42,8 +42,7 @@ router.get('/search', function(req, res) {
         result.sort(function (a, b) {
             return values.get(b) - values.get(a);
         })
-
-        console.log(result); 
+        
         res.send(result); 
     });
 });

@@ -19,16 +19,18 @@
   <div class="container-fluid">
       <div class="row pt-3-half">
         <div class="col-12">
-          <select class="selectpicker form-control" id="search-select" title="Search for columns with..."
+          <select class="selectpicker" data-width="100%" id="search-select" title="Search for columns with..."
             data-live-search="true" multiple>
             <optgroup label="Feature" id="feature-opt"></optgroup>
             <optgroup label="Grain Size" id="grain-opt"></optgroup>
           </select>
         </div>
       </div>
+      <div class="row"> <div class="col-12">
       <div class="float-right pt-3-half">
         <button class="btn btn-outline-primary" id="go-search">Search</button>
       </div>
+    </div></div>
     <div id="search-results"></div>
   </div>
 </body>
