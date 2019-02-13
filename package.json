@@ -6,11 +6,12 @@
     "author": "Bill Kusters, Gailin Pease",
     "license": "MIT",
     "scripts": {
-        "start": "node src/app.js"
+        "start": "nodemon src/app.js"
     },
     "dependencies": {
         "dotenv": "^6.2.0",
         "express": "^4.16.4",
+        "http-auth": "^3.2.3",
         "mongoose": "^5.4.4"
     },
     "devDependencies": {

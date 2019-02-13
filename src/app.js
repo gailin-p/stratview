@@ -3,6 +3,7 @@ const http = require('http');
 const bodyParser = require('body-parser');
 const express = require('express');
 require('dotenv').config();
+var auth = require('http-auth');
 
 // local dependencies 
 const db = require('./db');
@@ -10,8 +11,19 @@ const views = require('./routes/views');
 const api = require('./routes/api');
 const util = require('./routes/util'); 
 
-// initialize express app
-const app = express();
+// initialize express app and authentication. 
+// Modeled off https://www.npmjs.com/package/http-auth 
+var basic = auth.basic({
+  realm: "Dev Area."
+  }, (username, password, callback) => { 
+  // Custom authentication
+  callback(username === process.env.USR && password === process.env.PW);
+}
+);
+
+// Application setup.
+var app = express();
+app.use(auth.connect(basic));
 
 // set POST request body parser - source catbook 
 app.use(bodyParser.urlencoded({ extended: false }));

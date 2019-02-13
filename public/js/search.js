@@ -47,6 +47,9 @@ function searchResults() {
             for (i=0; i<results_list.length; i++){
                 resultsDOM.append(columnDOMObject(cols.get(results_list[i]))); 
             }
+
+            // refresh once we have items 
+            $('.selectpicker').selectpicker('refresh');
         });
     });
 }
