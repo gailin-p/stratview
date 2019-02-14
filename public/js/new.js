@@ -1,3 +1,5 @@
+// TODO consider splitting this file into one file to handle chemical data and one to handle stratigraphy
+
 // Modeled off https://mdbootstrap.com/docs/jquery/tables/editable/#! 
 // Makes the add bed button clone a hidden row, makes the remove button remove a row
 function tableSetUp() {
@@ -49,7 +51,7 @@ function saveColumn() {
     newCol.beds = data;
     post('/api/column', newCol); 
 
-    window.location.href = "/" // go to user home
+    window.location.href = "/" // go home
 }
 
 // Can't condense these calls into a function because return types are different 
@@ -80,35 +82,100 @@ function getFeatureOptions() {
         for (let i=0; i<chems.length; i++){
             const chemElt = document.createElement('option'); 
             chemElt.innerHTML = chems[i].chem_id;
-            console.log(chemElt)
+            chemElt.id = "option-"+chems[i].chem_id
             cSelect.appendChild(chemElt);
+            $('#chem-select').selectpicker('refresh');
         }
     });
-    //$('#chem-select').selectpicker();
 }
 
 // Return a DOM object for chemical data entry 
 function ChemDataEntryDOM(chemtype) {
     const card = document.createElement('div');
-    card.setAttribute('id', chemtype);
-    card.className = 'card column';
+    card.className = 'card data-card';
+
+    const cardHeader = document.createElement('div');
+    cardHeader.className = 'card-header'; 
+    cardHeader.innerHTML = chemtype; 
+    card.appendChild(cardHeader);
   
     const cardBody = document.createElement('div');
     cardBody.className = 'card-body';
-    cardBody.innerHTML = chemtype;
+    const table = document.createElement('table'); 
+    table.className = 'table table-bordered table-sm table-responsive-md table-striped text-center'
+    //table.id = "table-" + chemtype;
+
+    // table headers 
+    const tableHead = document.createElement('tr'); 
+    tableHead.className = "d-flex";
+    const row1 = document.createElement('th'); 
+    row1.innerHTML = "Height"
+    row1.className = "col-5"
+    const row2 = document.createElement('th'); 
+    row2.innerHTML = "Value"
+    row2.className = "col-5"
+    const row3 = document.createElement('th');
+    const trashGlyph = document.createElement('em'); 
+    trashGlyph.className = "fas fa-trash-alt"
+    row3.appendChild(trashGlyph);
+    row3.className = "col-2"
+    tableHead.appendChild(row1); tableHead.appendChild(row2); tableHead.appendChild(row3);
+    table.appendChild(tableHead);
+
+    cardBody.appendChild(table);
+
+    // button for new table row 
+    const buttonSpan = document.createElement('span'); 
+    buttonSpan.className = "float-right";
+    const button = document.createElement('button'); 
+    button.className = "btn btn-outline-secondary";
+    button.innerHTML = "Add row";
+    button.addEventListener('click', () => {
+        //console.log('hi i was clicked'+ chemtype);
+        const row = document.createElement('tr'); 
+        row.className ="d-flex";
+        const col1 = document.createElement('td'); col1.className ="col-5";
+        col1.setAttribute("contenteditable", "true"); 
+        col1.innerHTML = "0.0";
+        const col2 = document.createElement('td'); col2.className="col-5";
+        col2.setAttribute("contenteditable", "true"); 
+        col2.innerHTML = "0.0";
+        const col3 = document.createElement('td'); col3.className="col-2";
+        const button = document.createElement('button'); button.setAttribute('type', 'button');
+        button.className = "table-remove btn btn-outline-danger btn-sm my-0";
+        const trashGlyph = document.createElement('em'); 
+        trashGlyph.className = "fas fa-trash-alt"
+        button.appendChild(trashGlyph); col3.appendChild(button);
+        row.appendChild(col1); row.appendChild(col2); row.appendChild(col3); 
+        table.appendChild(row); 
+        // Need to initialize click funciton for new table-remove button
+        $('.table-remove').click(function () {
+            $(this).parents('tr').detach();
+        });
+    });
+    buttonSpan.appendChild(button);
+    cardBody.appendChild(buttonSpan);
+
     card.appendChild(cardBody);
-
-
-    // TODO  data entry here 
-  
     return card;
 }
 
 function onNewChem() {
-    $('#chem-collapse').append(ChemDataEntryDOM($('#chem-select').val()))
+    const chemtype = $("#chem-select").val()
+    $('#chem-dats').prepend(ChemDataEntryDOM(chemtype))
+
+    // Find chemical data option and remove from selector 
+    $('#option-'+chemtype).remove()
+    $('#chem-select').selectpicker('refresh');
+    $("#chem-add").attr('disabled', 'true');
 }
 
-getFeatureOptions();
-tableSetUp();
+getFeatureOptions(); // Initialize dropdowns 
+tableSetUp(); // Initializes buttons for beds table only 
 document.getElementById("chem-add").addEventListener('click', onNewChem);
 document.getElementById("save-col").addEventListener('click', saveColumn);
+
+// Button to add chemical data should be dissabled until something is selected
+$( "#chem-select" ).change(function() {
+    $("#chem-add").removeAttr('disabled');
+});

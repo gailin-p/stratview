@@ -15,6 +15,11 @@
     margin-bottom: 5px;
 }
 
-.column {
+.data-card {
 	margin: 10px 0px;
+}
+
+.scroll {
+    max-height: 100px;
+    overflow-y: auto;
 }

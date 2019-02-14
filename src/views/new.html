@@ -3,8 +3,8 @@
 
 <head>
   <title>New</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
-    crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css">
   <link rel="stylesheet" href="/static/css/style.css">
 </head>
@@ -36,27 +36,27 @@
     <div class="collapse" id="data-collapse">
       <div class="row">
         <div class="col-12">
-          <div id="table" class="table-editable">
+          <div id="table" class="table-editable text-input">
             <table class="table table-bordered table-responsive-md table-striped text-center">
               <tr class="d-flex">
                 <th class="text-center col-2">Bed start</th>
                 <th class="text-center col-2">Bed end</th>
                 <th class="text-center col-3">Grain size</th>
-                <th class="text-center col-3">Features</th>
-                <th class="text-center col-2">Remove</th>
+                <th class="text-center col-4">Features</th>
+                <th class="text-center col-1"><em class="fas fa-trash-alt"></em></th>
               </tr>
               <!-- This is our clonable table line -->
               <tr class="hide d-none">
-                <td class="pt-3-half col-2 number" contenteditable="true">0.0</td>
-                <td class="pt-3-half col-2 number" contenteditable="true">0.0</td>
-                <td class="pt-3-half col-3 grain" contenteditable="false">
+                <td class="col-2 number" contenteditable="true">0.0</td>
+                <td class="col-2 number" contenteditable="true">0.0</td>
+                <td class="col-3 grain" contenteditable="false">
                   <select class="in-table-select grain-select" data-size=3></select>
                 </td>
-                <td class="pt-3-half col-3 feature" contenteditable="false">
-                  <select class="in-table-select feature-select" multiple data-live-search=true data-size=3></select>
+                <td class="col-4 feature" contenteditable="false">
+                  <select class="in-table-select feature-select" data-width=100% multiple data-live-search=true data-size=3></select>
                 </td>
-                <td class="col-2">
-                  <span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0">Remove</button></span>
+                <td class="col-1">
+                  <button type="button" class="table-remove btn btn-outline-danger btn-sm my-0"><em class="fas fa-trash-alt"></em></button>
                 </td>
               </tr>
             </table>
@@ -73,12 +73,15 @@
       Show chemical data
   </button></div>  </div>
   <div class="collapse" id="chem-collapse">
+    
     <div class="row pt-3-half">
       <div class="col-12">
-      <select id="chem-select" class="selectpicker"></select>
-      <button class="btn btn-outline-secondary" id="chem-add">Add chemical data</button>
+      <select id="chem-select" title="Chemical data type" class="selectpicker"></select>
+      <button class="btn btn-outline-secondary" disabled id="chem-add">Add chemical data</button>
     </div>
   </div>
+  <div id="chem-dats">
+</div>
   </div> 
     <span class="float-right pt-3-half">
       <button class="btn btn-primary" id="save-col">Save column</button>
