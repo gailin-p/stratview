@@ -4,7 +4,7 @@
 function columnDOMObject(columnJSON) {
     const card = document.createElement('div');
     card.setAttribute('id', columnJSON.column_id);
-    card.className = 'card column';
+    card.className = 'card my-3';
   
     const cardBody = document.createElement('div');
     cardBody.className = 'card-body';
