@@ -27,6 +27,7 @@ function computeIndex(column_id, beds) {
     count.forEach(function(value, key, map){
         SIndex.update({ feature_id: key }, { $set: { ['frequency.'+column_id]: value/allBeds }}, function(err, raw){
             if (err) console.log(err);
+            console.log("Saved index for "+column_id); 
         });
     });
 

@@ -8,7 +8,7 @@ if (!mongoURL){
 }
 const options = {
     useNewUrlParser: true,
-    autoIndex: false // set this to true if creating or updating indices in schemas
+    autoIndex: true // set this to true if creating or updating indices in schemas
 };
 mongoose.connect(mongoURL, options);
 mongoose.Promise = global.Promise;

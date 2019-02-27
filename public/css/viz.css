@@ -5,12 +5,14 @@
   text-anchor: end;
 }
 
-.viz-box {
-  margin: 15px; 
-}
-
 rect.non {
   fill: rebeccapurple; 
+}
+
+.chem-data-pt {
+  stroke: steelblue;
+  stroke-width: 1.5; 
+  fill: none;
 }
 
 /* Axis styling from https://bost.ocks.org/mike/bar/3/ */ 

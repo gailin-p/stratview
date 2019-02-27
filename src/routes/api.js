@@ -73,6 +73,12 @@ router.get('/beds', function(req, res) {
     });
 });
 
+router.get('/chem', function(req, res) {
+    ChemData.find({column_id: req.query.column_id}, function(err, chem) {
+        res.send(chem); // Always returns an array, even if size 0 or 1 
+    })
+});
+
 router.get('/feature', function(req,res){
     // return all features 
     Feature.find({}, function (err, features){
@@ -96,22 +102,7 @@ router.get('/grain', function(req,res){
 
 router.post('/column', function(req, res) { 
     // req.body because this is a post request
-    beds = []
-    for (i=0; i<req.body.beds.length; i++) {
-        const b = req.body.beds[i];
-        const newBed = new Bed({
-            bed_start: b.bed_start, 
-            bed_end: b.bed_end, 
-            grain_size: b.grain_size, 
-            features : b.features, 
-            column_id: b.column_id, 
-        });
-        newBed.save(function(err, bed){
-            if(err) console.log(err);
-        });
-        beds.push(newBed); 
-    };
-
+    // column needs to be saved first because if it fails, we don't want to save beds
     const newCol = new Column({
         column_id: req.body.column_id, 
         creator_id: "Anon", 
@@ -120,15 +111,50 @@ router.post('/column', function(req, res) {
         search_keys: [],
     });
     newCol.save(function(err){
-        if(err) {console.log(err); }
-    })
+        if(err) {
+            console.log(err); 
+            res.send({msg:"Failed to save beds"}); // TODO don't currently do anything with this on frontend
+            return; 
+        ;} // if err, don't save beds.
 
-    // Computing index using beds that are NOT the saved version of the beds
-    // This is ok iff two people are not trying to create a column with the same column_id
-    // at the same time. Ok for now at this scale, would need locks / safety at larger scale
-    computeIndex(req.body.column_id, beds);
-    
-    res.send({});
+        beds = []
+        for (i=0; i<req.body.beds.length; i++) {
+            const b = req.body.beds[i];
+            const newBed = new Bed({
+                bed_start: b.bed_start, 
+                bed_end: b.bed_end, 
+                grain_size: b.grain_size, 
+                features : b.features, 
+                column_id: b.column_id, 
+            });
+            newBed.save(function(err, bed){
+                if(err) console.log(err);
+            });
+            beds.push(newBed); 
+        };
+
+        for (i=0; i<req.body.chem.length; i++) {
+            const c = req.body.chem[i]; 
+            const newChem = new ChemData({
+                column_id: c.column_id, 
+                data_type: c.data_type,
+                comments: "",
+                data: [],
+            })
+            for (j=0; j<c.data.length; j++){
+                newChem.data.push({depth: c.data[j].depth, value: c.data[j].value});
+            }
+            newChem.save(function(err, chem){
+                if (err) console.log(err);
+            });
+        }
+            
+        // Computing index using beds that are NOT the saved version of the beds
+        // This is ok iff two people are not trying to create a column with the same column_id
+        // at the same time. Ok for now at this scale, would need locks / safety at larger scale
+        computeIndex(req.body.column_id, beds);
+        res.send({msg:"saved column"});
+    })
 });
 
 module.exports = router;

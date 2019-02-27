@@ -21,8 +21,8 @@ function tableSetUp() {
 function saveColumn() {
     // FIRST: create column 
     const newCol = {
-        formation: document.getElementById('formation-name').value, 
-        column_id: document.getElementById('column-name').value,
+        formation: document.getElementById('formation-name').value.trim(), 
+        column_id: document.getElementById('column-name').value.trim(),
         description: document.getElementById('description').value,
     }
 
@@ -47,8 +47,26 @@ function saveColumn() {
 
         data.push(bed);
     });
-
     newCol.beds = data;
+
+    var chem = []; // object for each chem data 
+    // Create a chem object for each chemical data 
+    var $chem = $('.chemdata');
+    $chem.each(function () {
+        var cdata = {}; 
+        cdata["data_type"] = $(this).find('.card-header').text();
+        cdata["column_id"] = newCol.column_id;
+        cdata["data"] = []; 
+        $(this).find('.data-row').each(function() {
+            datum = {} 
+            datum["depth"] = $(this).find('.chem-height').eq(0).text();
+            datum["value"] = $(this).find('.chem-value').eq(0).text();
+            cdata.data.push(datum); 
+        });
+        chem.push(cdata);
+    })
+    newCol.chem = chem; 
+
     post('/api/column', newCol); 
 
     window.location.href = "/" // go home
@@ -92,7 +110,7 @@ function getFeatureOptions() {
 // Return a DOM object for chemical data entry 
 function ChemDataEntryDOM(chemtype) {
     const card = document.createElement('div');
-    card.className = 'card data-card';
+    card.className = 'card data-card chemdata'; // chemdata class is just for finding these 
 
     const cardHeader = document.createElement('div');
     cardHeader.className = 'card-header'; 
@@ -102,8 +120,7 @@ function ChemDataEntryDOM(chemtype) {
     const cardBody = document.createElement('div');
     cardBody.className = 'card-body';
     const table = document.createElement('table'); 
-    table.className = 'table table-bordered table-sm table-responsive-md table-striped text-center'
-    //table.id = "table-" + chemtype;
+    table.className = 'table table-bordered table-sm table-responsive-md table-striped text-center';
 
     // table headers 
     const tableHead = document.createElement('tr'); 
@@ -133,13 +150,17 @@ function ChemDataEntryDOM(chemtype) {
     button.addEventListener('click', () => {
         //console.log('hi i was clicked'+ chemtype);
         const row = document.createElement('tr'); 
-        row.className ="d-flex";
+        row.className ="d-flex data-row"; // data-row is for getting rows (when saving)
         const col1 = document.createElement('td'); col1.className ="col-5";
         col1.setAttribute("contenteditable", "true"); 
         col1.innerHTML = "0.0";
+        col1.classList.add("chem-height");// for finding this cell (when saving)
+        col1.classList.add('number'); 
         const col2 = document.createElement('td'); col2.className="col-5";
         col2.setAttribute("contenteditable", "true"); 
         col2.innerHTML = "0.0";
+        col2.classList.add("chem-value"); // for finding this cell (when saving)
+        col2.classList.add('number'); 
         const col3 = document.createElement('td'); col3.className="col-2";
         const button = document.createElement('button'); button.setAttribute('type', 'button');
         button.className = "table-remove btn btn-outline-danger btn-sm my-0";

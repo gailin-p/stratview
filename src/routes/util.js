@@ -49,12 +49,12 @@ router.get('/recreateindex', function(req,res){
 router.get('/buildindex', function(req,res){
     Column.find({}, function(err, columns){
         for (i=0; i<columns.length; i++){
-            console.log("column "+columns[i].column_id);
             col = columns[i];
             Bed.find({column_id: col.column_id}, function(err, beds){
                 if(err) console.log(err); 
                 if(beds.length < 1) console.log("ERROR: Column has no beds")
                 // index
+                console.log("column "+beds[0].column_id);
                 computeIndex(beds[0].column_id, beds); 
             });
         }
@@ -95,7 +95,18 @@ router.get('/putfeature', function (req, res) {
     Feature.deleteMany({}, function (err) {
         if (err) console.log(err);
 
-        features = ['spr', 'al', '10 qtz sand', '20 qtz sand', 'icg', 'rip', '30 qtz sand', 'si', 'ss', 'vg']
+        //features = ['spr', 'al', '10 qtz sand', '20 qtz sand', 'icg', 'rip', '30 qtz sand', 'si', 'ss', 'vg']
+        features = ['non', 'ewc', 'silt', 'icg', 'si nod', 'si', 'vg', 'red siltstone', 'oo', 'ecstm', 
+        'Sandstone', 'pis', 'tfted lam', 'Tep', 'hcs', 'xbed', 'recry', 'al', 'vg al', 
+         'alrose', '70qtzsand', 'brecciavg', 'vgal', 'rip', 'ripsi', 'vgrose', 
+        'breccia', 'xbedcement', 'gypsumxstls', 'gp',  'sw', 
+        '10 qtz sand', 'ss', 'wavy', 'rose', 'grded', '10 qtz nuclei', '30 vc qtz sand', 
+        '50 vc qtz sand', 'tp', 'sparse oo', 'spr', '20 qtz sand', '30 qtz sand', 'dmstm', 
+        '50 qtz sand', 'ss lenses', 'flaser', 'Oo', 'Si', 'tfa', 'onc', 
+        'tufted', 'FP cements', '5 qtz sand', 'sii', 'sand', 'Xbed', 'nod', 'crl', 'mnod', 
+        'Crl', 'ma', 'smstm', 'fl', 'crlmstm', 'ml', 'il', 'ilstm', 'ldmstm', 'mstm', 'ldstm', 
+        'eldmstm', 'tstm', 'constm', 'isstm', 'smstm ml', 'md', 'cl', 'tftl', 'tl', 'mdstm', 
+        'tb']
 
         for (i = 0; i < features.length; i++) {
             feature = new Feature({
@@ -137,15 +148,42 @@ router.get('/putchemtype', function (req, res) {
     });
 });
 
+router.get('/deleteallbeds', function(req, res){
+    col = "ST2"
+    Bed.deleteMany({column_id:col}, function(err){
+        if (err) {(console.log(err))}
+        Column.deleteMany({column_id:col}, function(err){
+            if(err) {console.log(err)}
+            ChemData.deleteMany({column_id:col}, function(err){
+                if(err) {console.log(err)};
+                res.send("deleted everything for "+col);
+            })
+        })
+    })
+})
+
 //For putting example columns into database. 
 router.get('/omandat', function(req, res){
     // Fill in here with oman data from jupyter notebook 
-    bed_bottoms = 
-    bed_tops = 
-    grain = 
-    features = 
+    // bed_bottoms = 
+    // bed_tops = 
+    // grain = 
+    // features = 
 
-    col_name = ""
+    // // chemistry is a list of lists of chem data entries {depth: , value: }
+    // chemistry = 
+    // // chem_types is a list of the chem types, same length as the outer list of chemistry 
+    // chem_types = 
+chem_types=[]
+    chemistry = []
+
+    bed_bottoms = [0.0, 4.0, 6.0, 8.0, 9.0, 11.0, 14.8, 16.0, 18.6, 25.4, 30.2, 30.9, 31.0, 32.0, 33.0]
+bed_tops = [4.0, 6.0, 8.0, 9.0, 11.0, 14.8, 16.0, 18.6, 25.4, 30.2, 30.9, 31.0, 32.0, 33.0, 33.4]
+grain = ['vf', 'vf', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f']
+features = [['constm', 'dolomite'], ['constm', 'dolomite'], ['constm', 'dolomite'], ['constm', 'dolomite'], ['constm', 'dolomite'], ['constm', 'dolomite'], ['constm', 'dolomite'], ['constm', 'dolomite'], ['dmstm', 'mstm', 'dolomite'], ['ma', 'dolomite'], ['dolomite'], ['10 qtz sand', 'sand', 'dolomite'], ['rip', 'dolomite'], ['il', 'ilstm', 'dolomite'], ['il', 'dolomite']]
+col_name="WS3"
+    
+
     formation = "oman"
     description = "Data from Kristin Bergmann"
 
@@ -159,8 +197,22 @@ router.get('/omandat', function(req, res){
         });
         newBed.save(function(err, bed){
             if(err) console.log(err);
+            console.log("saved bed")
         });
     };
+
+    for (i = 0; i<chemistry.length; i++){
+        const newChem = new ChemData({
+            column_id: col_name, 
+            data_type: chem_types[i],
+            comments: "Chemical data from Bergmann", 
+            data: chemistry[i]
+        })
+        newChem.save(function(err,bed){
+            if(err) console.log(err); 
+            console.log("saved chem")
+        })
+    }
 
     const newCol = new Column({
         column_id: col_name, 
@@ -171,6 +223,7 @@ router.get('/omandat', function(req, res){
     });
     newCol.save(function(err, formation){
         if(err) console.log(err); 
+        console.log("saved column")
     })
     
     res.send({});
