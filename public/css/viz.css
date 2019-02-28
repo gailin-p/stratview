@@ -1,12 +1,33 @@
 
 .chart text {
-  fill: white;
+  fill: black;
   font: 10px sans-serif;
   text-anchor: end;
 }
 
-rect.non {
-  fill: rebeccapurple; 
+rect{
+  stroke-width: .75px;
+  stroke: grey;
+}
+
+rect.none {
+  fill: whitesmoke; 
+}
+
+rect.silt{
+  fill: indianred;
+}
+
+rect.sand{
+  fill: seagreen;
+}
+
+rect.dolomite{
+  fill: cornflowerblue;
+}
+
+rect.shale{
+  fill: darkorange;
 }
 
 .chem-data-pt {

@@ -96,17 +96,7 @@ router.get('/putfeature', function (req, res) {
         if (err) console.log(err);
 
         //features = ['spr', 'al', '10 qtz sand', '20 qtz sand', 'icg', 'rip', '30 qtz sand', 'si', 'ss', 'vg']
-        features = ['non', 'ewc', 'silt', 'icg', 'si nod', 'si', 'vg', 'red siltstone', 'oo', 'ecstm', 
-        'Sandstone', 'pis', 'tfted lam', 'Tep', 'hcs', 'xbed', 'recry', 'al', 'vg al', 
-         'alrose', '70qtzsand', 'brecciavg', 'vgal', 'rip', 'ripsi', 'vgrose', 
-        'breccia', 'xbedcement', 'gypsumxstls', 'gp',  'sw', 
-        '10 qtz sand', 'ss', 'wavy', 'rose', 'grded', '10 qtz nuclei', '30 vc qtz sand', 
-        '50 vc qtz sand', 'tp', 'sparse oo', 'spr', '20 qtz sand', '30 qtz sand', 'dmstm', 
-        '50 qtz sand', 'ss lenses', 'flaser', 'Oo', 'Si', 'tfa', 'onc', 
-        'tufted', 'FP cements', '5 qtz sand', 'sii', 'sand', 'Xbed', 'nod', 'crl', 'mnod', 
-        'Crl', 'ma', 'smstm', 'fl', 'crlmstm', 'ml', 'il', 'ilstm', 'ldmstm', 'mstm', 'ldstm', 
-        'eldmstm', 'tstm', 'constm', 'isstm', 'smstm ml', 'md', 'cl', 'tftl', 'tl', 'mdstm', 
-        'tb']
+        features = ['sii', 'hcs', 'xbed', 'fl', 'ss lenses', 'gp', '5 qtz sand', 'shale', 'tfa', 'cl', 'tstm', 'dmstm', 'nod', 'isstm', 'ldstm', 'wavy', 'grded', 'Crl', 'recry', 'vg al', 'alrose', 'sparse oo', 'FP cements', 'ss', 'tl', 'Si', 'si nod', 'siltstone', 'smstm', '30 qtz sand', 'mstm', 'xbedcement', '10 qtz nuclei', 'ripsi', 'Tep', 'ma', 'ilstm', 'Oo', 'flaser', '50 vc qtz sand', 'al', 'mnod', '10 qtz sand', 'red siltstone', '30 vc qtz sand', 'rip', 'Xbed', 'crl', 'si', 'constm', 'ecstm', 'sandstone', 'pis', 'vg', 'vgrose', 'dolomite', 'gypsumxstls', 'il', 'ewc', 'icg', 'onc', 'ldmstm', 'md', 'tp', '70qtzsand', 'mdstm', 'ml', 'tftl', '50 qtz sand', 'tfted lam', 'sand', 'crlmstm', 'eldmstm', 'tufted', 'oo', 'spr', 'brecciavg', 'tb', '20 qtz sand', 'breccia', 'sw', 'smstm ml', 'rose']
 
         for (i = 0; i < features.length; i++) {
             feature = new Feature({

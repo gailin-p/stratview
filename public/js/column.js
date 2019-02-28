@@ -1,9 +1,9 @@
 // TODO size svgs based on surrounding div, not absolute 
 
 // constants for sizing SVG 
-margin = {top: 20, right: 30, bottom: 30, left: 30},
+margin = {top: 20, right: 30, bottom: 80, left: 30},
         width = 300 - margin.left - margin.right,
-        height = 600 - margin.top - margin.bottom,
+        height = 700 - margin.top - margin.bottom,
         chemWidth = 600 - margin.left - margin.right;
 
 // Strat column modeled off https://bost.ocks.org/mike/bar/ (posts 1, 2, and 3)
@@ -68,20 +68,11 @@ function bars(column_id) {
             .attr('y', function (d) { return y(d.bed_end); })
             .attr("width", function (d) {return x(d.grain_size); })
             .attr("height", function(d) {return y(d.bed_start) - y(d.bed_end)})
-            .attr("class", function(d) {
-                // TODO different styling for different features  
-                if ($.inArray('non', d.features) >= 0) {
-                    return "non"
-                }
-                return '';
-            })
+            .attr("class", featureStyling)
             .on('mouseover', tip.show)
             .on('mouseout', tip.hide);
 
         for (c =0; c<chemData.length; c++){
-            // var chemSvg = document.createElement("svg");
-            // chemSvg.setAttribute("id", chemData[c].data_type); 
-            // document.getElementById("chem").appendChild(chemSvg);
             chemDataPlot(chemData[c], y, chemWidth/chemData.length);
         }
 
@@ -130,8 +121,50 @@ function chemDataPlot(chemData, y, width){
 
 // Given a bed d, return class name 
 function featureStyling(d) {
+    // TODO different styling for different features  
+    if ($.inArray('siltstone', d.features) >= 0) {
+        return "silt"
+    }
+    if ($.inArray('sandstone', d.features) >= 0) {
+        return "sand"
+    }
+    if ($.inArray('dolomite', d.features) >= 0) {
+        return "dolomite"
+    }
+    if ($.inArray('shale', d.features) >= 0) {
+        return "shale"
+    }
+    return 'none';
+}
 
+// Add svg for one item in key. 
+function color_key_item(chart, style, name, num){
+    chart.append("rect")
+        .attr("class",style)
+        .attr("width", 10)
+        .attr("height", 10)
+        .attr("y", (num*13));
+    chart.append("text")
+        .attr("dy", ".71em")
+        .text(name)
+        .style("text-anchor", "start")
+        .attr("x",13)
+        .attr("y", (num*13));
+}
+
+// Below the stratigraphic column, add a key for the bar colors 
+function color_key() {
+    var chart = d3.select(".chart")
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + (height + 50) + ")");
+        
+    color_key_item(chart, "sand", "Sandstone", 0);
+    color_key_item(chart, "shale", "Shale", 1);
+    color_key_item(chart, "silt", "Siltstone", 2);
+    color_key_item(chart, "dolomite", "Dolomite", 3);
 }
 
 const column_id = decodeURI(window.location.search.substring(1));
+document.getElementById("column_name").innerHTML = column_id;
 bars(column_id);
+color_key(); 
