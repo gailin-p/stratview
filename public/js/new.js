@@ -18,10 +18,16 @@ function tableSetUp() {
 }
 
 // Table reading code modeled off https://mdbootstrap.com/docs/jquery/tables/editable/#! 
+// TODO Data validation!!!!
+/**
+ * - is this column name already being used? 
+ * - do the beds overlap? 
+ * - does the sum of the bed widths = the top of the final bed? (doesn't need to, but good check)
+ */
 function saveColumn() {
     // FIRST: create column 
     const newCol = {
-        formation: document.getElementById('formation-name').value.trim(), 
+        formation: document.getElementById('formation-name').value, 
         column_id: document.getElementById('column-name').value.trim(),
         description: document.getElementById('description').value,
     }
@@ -66,6 +72,7 @@ function saveColumn() {
         chem.push(cdata);
     })
     newCol.chem = chem; 
+    newCol.edited = edited; 
 
     post('/api/column', newCol); 
 
@@ -191,8 +198,63 @@ function onNewChem() {
     $("#chem-add").attr('disabled', 'true');
 }
 
+// If an existing column is specified, load its beds and chemical data
+function loadData(column_id) {
+    if (column_id.length == 0){
+        return false; 
+    }
+    // loading spinners 
+    $('#show-beds').attr("disabled", true);
+    $('#show-beds').text("Loading beds...");
+    //TODO: figure out why I can't get a spinner here (see https://getbootstrap.com/docs/4.3/components/spinners/ )
+    //$('#show-beds').append('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+    get('/api/column', {column_id: column_id }, function(columns){
+        // Set formation, description 
+        const column = columns[0];
+        $('#formation-name').val(column.formation); 
+        $('#column-name').val(column.column_id); 
+        $('#description').val(column.description);
+    }); 
+    get('/api/beds', {column_id: column_id }, function (data) {
+        // data is a list of beds. sort by bed start
+        data.sort(function(a,b){return a.bed_start - b.bed_start;})
+        console.log(data);
+        // This is the same code used to add a row to the table. 
+        // There may (probably is...) a better/more efficient way to do this
+        for (var i=0; i<data.length; i++){
+            var $TABLE = $('#table');
+            var $clone = $TABLE.find('tr.hide').clone(true).removeClass('hide d-none');
+            $clone.find('select').selectpicker(); // turn a normal select into searchable, multiselect
+            $clone.addClass("d-flex")
+            $TABLE.find('table').append($clone); 
+
+            var $num = $clone.find('.number');
+            var $select = $clone.find('select');
+
+            $num.eq(0).text(data[i].bed_start); 
+            $num.eq(1).text(data[i].bed_end); 
+            $select.eq(0).val(data[i].grain_size).change(); 
+            $select.eq(1).val(data[i].features).change(); 
+        }
+        // loading complete
+        $('#show-beds').removeAttr("disabled");
+        $('#show-beds').text("Show beds")
+    }); 
+    get('/api/chem', {column_id: column_id}, function(chemData){
+
+    });  
+
+    return true; 
+
+}
+
+// Initialize data 
 getFeatureOptions(); // Initialize dropdowns 
 tableSetUp(); // Initializes buttons for beds table only 
+const column_id = decodeURI(window.location.search.substring(1));
+const edited = loadData(column_id); // returns boolean 
+
+// Set up event listeners 
 document.getElementById("chem-add").addEventListener('click', onNewChem);
 document.getElementById("save-col").addEventListener('click', saveColumn);
 

@@ -23,6 +23,7 @@ function computeIndex(column_id, beds) {
         }
     }
 
+    // TODO: bug: when you update, should delete all old entries for this column. 
     // Save to index 
     count.forEach(function(value, key, map){
         SIndex.update({ feature_id: key }, { $set: { ['frequency.'+column_id]: value/allBeds }}, function(err, raw){

@@ -103,6 +103,29 @@ router.get('/grain', function(req,res){
 router.post('/column', function(req, res) { 
     // req.body because this is a post request
     // column needs to be saved first because if it fails, we don't want to save beds
+    // If we are editing, the column already exists. delete its beds. 
+    // TODO: an improvement would be to not rewrite all beds, but that's difficult. 
+    if (req.body.edited){
+        const col = req.body.column_id;
+        console.log("Column is edited, deleting all old beds before saving new"); 
+        Bed.deleteMany({column_id:col}, function(err){
+            if (err) {(console.log(err))}
+            Column.deleteMany({column_id:col}, function(err){
+                if(err) {console.log(err)}
+                ChemData.deleteMany({column_id:col}, function(err){
+                    if(err) {console.log(err)};
+                    console.log("Deleted all beds for column "+col); 
+                    save_column(req,res);
+                })
+            })
+        })
+    }else {
+        save_column(req,res);
+    }
+});
+
+// Only for use on a column that is not in the db
+function save_column(req, res){
     const newCol = new Column({
         column_id: req.body.column_id, 
         creator_id: "Anon", 
@@ -110,6 +133,9 @@ router.post('/column', function(req, res) {
         description: req.body.description, 
         search_keys: [],
     });
+
+    
+
     newCol.save(function(err){
         if(err) {
             console.log(err); 
@@ -155,6 +181,6 @@ router.post('/column', function(req, res) {
         computeIndex(req.body.column_id, beds);
         res.send({msg:"saved column"});
     })
-});
+}
 
 module.exports = router;

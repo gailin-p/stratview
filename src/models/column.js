@@ -7,7 +7,7 @@ const Feature = require('./feature');
 // define a schema
 const ColumnModelSchema = new mongoose.Schema({
     column_id: {type: String , unique: true, index: true}, 
-    creator_id: String,
+    creator_id: String, // currently unused
     formation: String, 
     description: String
 });

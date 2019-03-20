@@ -35,10 +35,18 @@ function columnDOMObject(columnJSON) {
     creatorSpan.setAttribute('href', '/column?' + columnJSON.column_id);
     cardBody.appendChild(creatorSpan);
   
+    // "edit" link 
+    const editSpan = document.createElement('a');
+    editSpan.className = 'card-text float-right';
+    editSpan.innerHTML = "Edit";
+    editSpan.setAttribute('href', '/new?' + columnJSON.column_id);
+    cardBody.appendChild(editSpan);
+
     const contentSpan = document.createElement('p');
     contentSpan.className = 'card-text';
     contentSpan.innerHTML = columnJSON.description;
     cardBody.appendChild(contentSpan);
+
   
     return card;
   }

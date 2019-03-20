@@ -30,8 +30,8 @@
     </div>
     <!-- table modeled off https://mdbootstrap.com/docs/jquery/tables/editable/#! -->
     <!-- Editable table -->
-    <button class="btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#data-collapse" aria-expanded="false" aria-controls="data-collapse">
-        Show beds
+    <button class="btn btn-outline-primary" id="show-beds" type="button" data-toggle="collapse" data-target="#data-collapse" aria-expanded="false" aria-controls="data-collapse">
+      Show beds
     </button>
     <div class="collapse" id="data-collapse">
       <div class="row">
@@ -47,7 +47,7 @@
               </tr>
               <!-- This is our clonable table line -->
               <tr class="hide d-none">
-                <td class="col-2 number" contenteditable="true">0.0</td>
+                <td class="col-2 number form-control" type="number" contenteditable="true">0.0</td>
                 <td class="col-2 number" contenteditable="true">0.0</td>
                 <td class="col-3 grain" contenteditable="false">
                   <select class="in-table-select grain-select" data-size=3></select>
@@ -69,7 +69,7 @@
     </div>
   <div class="row">
     <div class="col-12">
-  <button class="btn btn-outline-primary text-input" type="button" data-toggle="collapse" data-target="#chem-collapse" aria-expanded="false" aria-controls="chem-collapse">
+  <button class="btn btn-outline-primary text-input" id="show-chem" type="button" data-toggle="collapse" data-target="#chem-collapse" aria-expanded="false" aria-controls="chem-collapse">
       Show chemical data
   </button></div>  </div>
   <div class="collapse" id="chem-collapse">
@@ -84,7 +84,7 @@
 </div>
   </div> 
     <span class="float-right pt-3-half">
-      <button class="btn btn-primary mb-3" disabled=true id="save-col">Save column</button>
+      <button class="btn btn-primary mb-3" id="save-col">Save column</button>
     </span>
   </div>
 </body>
