@@ -28,26 +28,33 @@
         <textarea id="description" type="text" rows="3" placeholder="Description" class="form-control"></textarea>
       </div>
     </div>
+    <div class="row"><div class="col-12">
+    <button class="btn btn-outline-primary text-input" id="show-lith" type="button" data-toggle="collapse" data-target="#lith-collapse" aria-expanded="false" aria-controls="lith-collapse">
+        Show lithologies
+      </button></div></div>
+      <div class="collapse" id="lith-collapse">
     <div class="row text-input" >
       <div class="col-12">
       <ul class="list-group" id="lithologies">
         <li class="list-group-item">
           <div class="row">
-          <div class="col-10">
+          <div class="col-9">
           <input id="lith-input" type="text" placeholder="New lithology" class="form-control"></input>
           </div>
-          <div class="col-2">
-          <button class="btn btn-outline-secondary" id="add-lith">Add lithology</button>
+          <div class="col-3">
+          <button class="btn btn-outline-secondary btn-block" id="add-lith">Add lithology</button>
         </div></div>
         </li>
       </ul>
     </div>
     </div>
+  </div>
     <!-- table modeled off https://mdbootstrap.com/docs/jquery/tables/editable/#! -->
     <!-- Editable table -->
-    <button class="btn btn-outline-primary" id="show-beds" type="button" data-toggle="collapse" data-target="#data-collapse" aria-expanded="false" aria-controls="data-collapse">
+    <div class="row"><div class="col-12">
+    <button class="btn btn-outline-primary text-input" id="show-beds" type="button" data-toggle="collapse" data-target="#data-collapse" aria-expanded="false" aria-controls="data-collapse">
       Show beds
-    </button>
+    </button></div></div>
     <div class="collapse" id="data-collapse">
       <div class="row">
         <div class="col-12">
@@ -76,7 +83,7 @@
                   <select class="in-table-select feature-select" data-width=100% multiple data-live-search=true data-size=3></select>
                 </td>
                 <td class="col-2 lithology" contenteditable="false">
-                    <select class="in-table-select lith-select" data-live-search=true data-size=3>
+                    <select class="in-table-select lith-select" data-live-search=true multiple data-max-options=1 data-size=3>
 
                     </select>
                 </td>

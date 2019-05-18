@@ -155,7 +155,6 @@ function ChemDataEntryDOM(chemtype) {
     button.className = "btn btn-outline-secondary";
     button.innerHTML = "Add row";
     button.addEventListener('click', () => {
-        //console.log('hi i was clicked'+ chemtype);
         const row = document.createElement('tr'); 
         row.className ="d-flex data-row"; // data-row is for getting rows (when saving)
         const col1 = document.createElement('td'); col1.className ="col-5";
@@ -204,17 +203,18 @@ function addLith(){
     '</span><button type="button" class="lith-remove btn float-right btn-outline-danger btn-sm my-0">' +
     '<em class="fas fa-trash-alt"></em></button></li>');
     $('.lith-remove').on('click', function() {
-        console.log($(this).parent())
         const lithID = $(this).parent('li').find('.lith-name').text().trim().replace(/\s+/g, '-');
-        console.log(lithID)
+        // remove from list of lithologies 
         $(this).parent('li').remove();
+        // de-select this lithology 
+        $('tr').not('.hide').find('select.lith-select[value="'+lithID+'"]').val([])
+        // remove from dropdown 
         $('.lith-select').find('[value='+lithID+']').remove();
         $('tr').not(".hide").find('.lith-select').selectpicker('refresh'); 
     });
     
     // update dropdowns
     const lithID = $("#lith-input").val().trim().replace(/\s+/g, '-');
-    console.log(lithID);
     $('select.lith-select').append("<option value='" + lithID + "'>"+$("#lith-input").val().trim()+"</option>");
     // refresh dropdowns in non-hidden rows
     $('tr').not(".hide").find('.lith-select').selectpicker('refresh'); 
