@@ -102,7 +102,6 @@ router.get('/grain', function(req,res){
 
 router.post('/column', function(req, res) { 
     // req.body because this is a post request
-    // column needs to be saved first because if it fails, we don't want to save beds
     // If we are editing, the column already exists. delete its beds. 
     // TODO: an improvement would be to not rewrite all beds, but that's difficult. 
     if (req.body.edited){
@@ -124,7 +123,7 @@ router.post('/column', function(req, res) {
     }
 });
 
-// Only for use on a column that is not in the db
+// Only works on a column that is not in the db
 function save_column(req, res){
     const newCol = new Column({
         column_id: req.body.column_id, 
@@ -132,10 +131,10 @@ function save_column(req, res){
         formation: req.body.formation, 
         description: req.body.description, 
         search_keys: [],
+        lithologies: req.body.lithologies,
     });
 
-    
-
+    // column needs to be saved first because if it fails, we don't want to save beds
     newCol.save(function(err){
         if(err) {
             console.log(err); 
@@ -152,6 +151,7 @@ function save_column(req, res){
                 grain_size: b.grain_size, 
                 features : b.features, 
                 column_id: b.column_id, 
+                lithology: b.lithology,
             });
             newBed.save(function(err, bed){
                 if(err) console.log(err);

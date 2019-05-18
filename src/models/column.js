@@ -9,7 +9,8 @@ const ColumnModelSchema = new mongoose.Schema({
     column_id: {type: String , unique: true, index: true}, 
     creator_id: String, // currently unused
     formation: String, 
-    description: String
+    description: String,
+    lithologies: [String]
 });
 
 // compile model from schema

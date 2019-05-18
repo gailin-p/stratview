@@ -10,6 +10,7 @@ const BedModelSchema = new mongoose.Schema({
     bed_end: Number, 
     grain_size: String, 
     features: [String],
+    lithology: String // must be one of the lithologies in this column 
 });
 
 // compile model from schema

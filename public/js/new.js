@@ -49,12 +49,20 @@ function saveColumn() {
         bed["bed_end"] = $num.eq(1).text(); 
         bed["grain_size"] = $select.eq(0).val(); 
         bed["features"] = $select.eq(1).val(); 
+        bed["lithology"] = $select.eq(2).val(); 
         bed["column_id"] = newCol.column_id;
 
         data.push(bed);
     });
     newCol.beds = data;
 
+    // GET LITHOLOGIES 
+    const liths = $(".lith-name").map(function() {
+        return $(this).text();
+    }).get();
+    newCol.lithologies = liths; 
+
+    // GET CHEMICAL DATA 
     var chem = []; // object for each chem data 
     // Create a chem object for each chemical data 
     var $chem = $('.chemdata');
@@ -74,9 +82,14 @@ function saveColumn() {
     newCol.chem = chem; 
     newCol.edited = edited; 
 
-    post('/api/column', newCol); 
-
-    window.location.href = "/" // go home
+    post('/api/column', newCol, function(){
+        console.log("column sent to server")
+        window.location.href = "/" // go home
+    }, function(){
+        // TODO: get message from backend, inform user that save failed 
+        console.log('Save failed')
+        //window.location.href = "/" // go home
+    }); 
 }
 
 // Can't condense these calls into a function because return types are different 
@@ -127,7 +140,7 @@ function ChemDataEntryDOM(chemtype) {
     const cardBody = document.createElement('div');
     cardBody.className = 'card-body';
     const table = document.createElement('table'); 
-    table.className = 'table table-bordered table-sm table-responsive-md table-striped text-center';
+    table.className = 'table table-bordered table-sm table-responsive-md text-center';
 
     // table headers 
     const tableHead = document.createElement('tr'); 
@@ -203,19 +216,19 @@ function addLith(){
     '</span><button type="button" class="lith-remove btn float-right btn-outline-danger btn-sm my-0">' +
     '<em class="fas fa-trash-alt"></em></button></li>');
     $('.lith-remove').on('click', function() {
-        const lithID = $(this).parent('li').find('.lith-name').text().trim().replace(/\s+/g, '-');
+        const lithID = $(this).parent('li').find('.lith-name').text().trim();
         // remove from list of lithologies 
         $(this).parent('li').remove();
         // de-select this lithology 
         $('tr').not('.hide').find('select.lith-select[value="'+lithID+'"]').val([])
         // remove from dropdown 
-        $('.lith-select').find('[value='+lithID+']').remove();
+        $('.lith-select').find('[value="'+lithID+'"]').remove();
         $('tr').not(".hide").find('.lith-select').selectpicker('refresh'); 
     });
     
     // update dropdowns
-    const lithID = $("#lith-input").val().trim().replace(/\s+/g, '-');
-    $('select.lith-select').append("<option value='" + lithID + "'>"+$("#lith-input").val().trim()+"</option>");
+    const lithID = $("#lith-input").val().trim();
+    $('select.lith-select').append("<option value='" + lithID + "'>"+lithID+"</option>");
     // refresh dropdowns in non-hidden rows
     $('tr').not(".hide").find('.lith-select').selectpicker('refresh'); 
     
@@ -267,6 +280,7 @@ function loadData(column_id) {
         $('#show-beds').text("Show beds")
     }); 
 
+    // TODO load chem data 
     get('/api/chem', {column_id: column_id}, function(chemData){
 
     });  
