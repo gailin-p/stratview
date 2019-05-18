@@ -198,6 +198,32 @@ function onNewChem() {
     $("#chem-add").attr('disabled', 'true');
 }
 
+// Add a lithology. Add new lith object to list, Update lithology dropdowns 
+function addLith(){
+    $('#lithologies').append('<li class="list-group-item"><span class="lith-name">'+$("#lith-input").val().trim()+
+    '</span><button type="button" class="lith-remove btn float-right btn-outline-danger btn-sm my-0">' +
+    '<em class="fas fa-trash-alt"></em></button></li>');
+    $('.lith-remove').on('click', function() {
+        console.log($(this).parent())
+        const lithID = $(this).parent('li').find('.lith-name').text().trim().replace(/\s+/g, '-');
+        console.log(lithID)
+        $(this).parent('li').remove();
+        $('.lith-select').find('[value='+lithID+']').remove();
+        $('tr').not(".hide").find('.lith-select').selectpicker('refresh'); 
+    });
+    
+    // update dropdowns
+    const lithID = $("#lith-input").val().trim().replace(/\s+/g, '-');
+    console.log(lithID);
+    $('select.lith-select').append("<option value='" + lithID + "'>"+$("#lith-input").val().trim()+"</option>");
+    // refresh dropdowns in non-hidden rows
+    $('tr').not(".hide").find('.lith-select').selectpicker('refresh'); 
+    
+    // clear data entry
+    $('#lith-input').val('');
+}
+
+
 // If an existing column is specified, load its beds and chemical data
 function loadData(column_id) {
     if (column_id.length == 0){
@@ -240,6 +266,7 @@ function loadData(column_id) {
         $('#show-beds').removeAttr("disabled");
         $('#show-beds').text("Show beds")
     }); 
+
     get('/api/chem', {column_id: column_id}, function(chemData){
 
     });  
@@ -257,6 +284,7 @@ const edited = loadData(column_id); // returns boolean
 // Set up event listeners 
 document.getElementById("chem-add").addEventListener('click', onNewChem);
 document.getElementById("save-col").addEventListener('click', saveColumn);
+document.getElementById("add-lith").addEventListener('click', addLith); 
 
 // Button to add chemical data should be dissabled until something is selected
 $( "#chem-select" ).change(function() {
