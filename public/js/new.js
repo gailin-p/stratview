@@ -11,10 +11,6 @@ function tableSetUp() {
         $clone.addClass("d-flex")
         $TABLE.find('table').append($clone);
     });
-
-    // $('.table-remove').click(function () {
-    //     $(this).parents('tr').detach();
-    // });
 }
 
 // Table reading code modeled off https://mdbootstrap.com/docs/jquery/tables/editable/#! 
@@ -98,8 +94,24 @@ function saveColumn() {
     }); 
 }
 
+// Reference for downloading csv: 
+// https://stackoverflow.com/questions/14964035/how-to-export-javascript-array-info-to-csv-on-client-side
 function exportCsv() {
-    
+    const col = getCol(); 
+
+    const header = "bed_start, bed_end, grain_size, features, lithology\r\n"
+    const beds = col.beds.map(function(bed){return bed.bed_start+','+
+        bed.bed_end+','+ bed.grain_size + ',' + 
+        bed.features.join('\\') + ',' + bed.lithology}); 
+    const bedsStr = 'data:text/csv;charset=utf-8,' + header + beds.join('\r\n'); 
+
+    var encodedUri = encodeURI(bedsStr);
+    var link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", col.column_id+"_beds.csv");
+    document.body.appendChild(link); // Required for FF
+
+    link.click(); // This will download the data file
 }
 
 // Can't condense these calls into a function because return types are different 
@@ -145,11 +157,6 @@ function addChemRow(){
         '</td><td class="col-5 chem-value number" contenteditable="true">0.0'  +
         '</td><td class="col-2"><button type="button" class="table-remove btn btn-outline-danger btn-sm my-0">'+
         '<em class="fas fa-trash-alt"></em></button></td></tr>');
-    
-        // Need to initialize click funciton for new table-remove button
-    // $('.table-remove').click(function () {
-    //     $(this).parents('tr').detach();
-    // });
 }
 
 function onNewChem(chemtype) {
@@ -186,7 +193,6 @@ function addLith(newLith){
     });
     
     // update dropdowns
-    //const lithID = $("#lith-input").val().trim();
     $('select.lith-select').append("<option value='" + newLith + "'>"+newLith+"</option>");
     // refresh dropdowns in non-hidden rows
     $('tr').not(".hide").find('.lith-select').selectpicker('refresh'); 
