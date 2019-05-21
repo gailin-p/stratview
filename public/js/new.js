@@ -12,9 +12,9 @@ function tableSetUp() {
         $TABLE.find('table').append($clone);
     });
 
-    $('.table-remove').click(function () {
-        $(this).parents('tr').detach();
-    });
+    // $('.table-remove').click(function () {
+    //     $(this).parents('tr').detach();
+    // });
 }
 
 // Table reading code modeled off https://mdbootstrap.com/docs/jquery/tables/editable/#! 
@@ -24,7 +24,7 @@ function tableSetUp() {
  * - do the beds overlap? 
  * - does the sum of the bed widths = the top of the final bed? (doesn't need to, but good check)
  */
-function saveColumn() {
+function getCol() {
     // FIRST: create column 
     const newCol = {
         formation: document.getElementById('formation-name').value, 
@@ -45,8 +45,8 @@ function saveColumn() {
         var $select = $(this).find('select');
         var bed = {};
 
-        bed["bed_start"] = $num.eq(0).text(); 
-        bed["bed_end"] = $num.eq(1).text(); 
+        bed["bed_start"] = $num.eq(0).val(); 
+        bed["bed_end"] = $num.eq(1).val(); 
         bed["grain_size"] = $select.eq(0).val(); 
         bed["features"] = $select.eq(1).val(); 
         bed["lithology"] = $select.eq(2).val(); 
@@ -82,6 +82,12 @@ function saveColumn() {
     newCol.chem = chem; 
     newCol.edited = edited; 
 
+    return newCol; 
+}
+
+function saveColumn() {
+    const newCol = getCol(); 
+    
     post('/api/column', newCol, function(){
         console.log("column sent to server")
         window.location.href = "/" // go home
@@ -90,6 +96,10 @@ function saveColumn() {
         console.log('Save failed')
         //window.location.href = "/" // go home
     }); 
+}
+
+function exportCsv() {
+    
 }
 
 // Can't condense these calls into a function because return types are different 
@@ -127,82 +137,31 @@ function getFeatureOptions() {
     });
 }
 
-// Return a DOM object for chemical data entry 
-function ChemDataEntryDOM(chemtype) {
-    const card = document.createElement('div');
-    card.className = 'card data-card chemdata'; // chemdata class is just for finding these 
-
-    const cardHeader = document.createElement('div');
-    cardHeader.className = 'card-header'; 
-    cardHeader.innerHTML = chemtype; 
-    card.appendChild(cardHeader);
-  
-    const cardBody = document.createElement('div');
-    cardBody.className = 'card-body';
-    const table = document.createElement('table'); 
-    table.className = 'table table-bordered table-sm table-responsive-md text-center';
-
-    // table headers 
-    const tableHead = document.createElement('tr'); 
-    tableHead.className = "d-flex";
-    const row1 = document.createElement('th'); 
-    row1.innerHTML = "Height"
-    row1.className = "col-5"
-    const row2 = document.createElement('th'); 
-    row2.innerHTML = "Value"
-    row2.className = "col-5"
-    const row3 = document.createElement('th');
-    const trashGlyph = document.createElement('em'); 
-    trashGlyph.className = "fas fa-trash-alt"
-    row3.appendChild(trashGlyph);
-    row3.className = "col-2"
-    tableHead.appendChild(row1); tableHead.appendChild(row2); tableHead.appendChild(row3);
-    table.appendChild(tableHead);
-
-    cardBody.appendChild(table);
-
-    // button for new table row 
-    const buttonSpan = document.createElement('span'); 
-    buttonSpan.className = "float-right";
-    const button = document.createElement('button'); 
-    button.className = "btn btn-outline-secondary";
-    button.innerHTML = "Add row";
-    button.addEventListener('click', () => {
-        const row = document.createElement('tr'); 
-        row.className ="d-flex data-row"; // data-row is for getting rows (when saving)
-        const col1 = document.createElement('td'); col1.className ="col-5";
-        col1.setAttribute("contenteditable", "true"); 
-        col1.innerHTML = "0.0";
-        col1.classList.add("chem-height");// for finding this cell (when saving)
-        col1.classList.add('number'); 
-        const col2 = document.createElement('td'); col2.className="col-5";
-        col2.setAttribute("contenteditable", "true"); 
-        col2.innerHTML = "0.0";
-        col2.classList.add("chem-value"); // for finding this cell (when saving)
-        col2.classList.add('number'); 
-        const col3 = document.createElement('td'); col3.className="col-2";
-        const button = document.createElement('button'); button.setAttribute('type', 'button');
-        button.className = "table-remove btn btn-outline-danger btn-sm my-0";
-        const trashGlyph = document.createElement('em'); 
-        trashGlyph.className = "fas fa-trash-alt"
-        button.appendChild(trashGlyph); col3.appendChild(button);
-        row.appendChild(col1); row.appendChild(col2); row.appendChild(col3); 
-        table.appendChild(row); 
+function addChemRow(){
+    console.log(height);
+    $(this).parents('.card').find('table').append(
+    '<tr class="d-flex data-row">'+
+        '<td class="col-5 chem-height number" contenteditable="true">0.0' +
+        '</td><td class="col-5 chem-value number" contenteditable="true">0.0'  +
+        '</td><td class="col-2"><button type="button" class="table-remove btn btn-outline-danger btn-sm my-0">'+
+        '<em class="fas fa-trash-alt"></em></button></td></tr>');
+    
         // Need to initialize click funciton for new table-remove button
-        $('.table-remove').click(function () {
-            $(this).parents('tr').detach();
-        });
-    });
-    buttonSpan.appendChild(button);
-    cardBody.appendChild(buttonSpan);
-
-    card.appendChild(cardBody);
-    return card;
+    // $('.table-remove').click(function () {
+    //     $(this).parents('tr').detach();
+    // });
 }
 
-function onNewChem() {
-    const chemtype = $("#chem-select").val()
-    $('#chem-dats').prepend(ChemDataEntryDOM(chemtype))
+function onNewChem(chemtype) {
+    $('#chem-dats').append('<div class="card data-card chemdata">'+
+        '<div class="card-header">'+ chemtype +
+        '</div><div class="card-body">'+
+        '<table class="table table-bordered table-sm table-responsive-md text-center">'+
+        '<tr class="d-flex"><th class="col-5">Height</th><th class="col-5">Value</th>'+
+        '<th class="col-2"><em class="fas fa-trash-alt"></em></th></tr></table>'+
+        '<span class="float-right">'+
+        '<button class="btn btn-outline-secondary add-chem-row">Add row</button>'+
+        '</span></div></div>')
 
     // Find chemical data option and remove from selector 
     $('#option-'+chemtype).remove()
@@ -211,8 +170,8 @@ function onNewChem() {
 }
 
 // Add a lithology. Add new lith object to list, Update lithology dropdowns 
-function addLith(){
-    $('#lithologies').append('<li class="list-group-item"><span class="lith-name">'+$("#lith-input").val().trim()+
+function addLith(newLith){
+    $('#lithologies').append('<li class="list-group-item"><span class="lith-name">'+newLith+
     '</span><button type="button" class="lith-remove btn float-right btn-outline-danger btn-sm my-0">' +
     '<em class="fas fa-trash-alt"></em></button></li>');
     $('.lith-remove').on('click', function() {
@@ -227,13 +186,10 @@ function addLith(){
     });
     
     // update dropdowns
-    const lithID = $("#lith-input").val().trim();
-    $('select.lith-select').append("<option value='" + lithID + "'>"+lithID+"</option>");
+    //const lithID = $("#lith-input").val().trim();
+    $('select.lith-select').append("<option value='" + newLith + "'>"+newLith+"</option>");
     // refresh dropdowns in non-hidden rows
     $('tr').not(".hide").find('.lith-select').selectpicker('refresh'); 
-    
-    // clear data entry
-    $('#lith-input').val('');
 }
 
 
@@ -245,6 +201,8 @@ function loadData(column_id) {
     // loading spinners 
     $('#show-beds').attr("disabled", true);
     $('#show-beds').text("Loading beds...");
+    $('#show-chem').attr("disabled", true);
+    $('#show-chem').text("Loading chem data...", true);
     //TODO: figure out why I can't get a spinner here (see https://getbootstrap.com/docs/4.3/components/spinners/ )
     //$('#show-beds').append('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
     get('/api/column', {column_id: column_id }, function(columns){
@@ -253,36 +211,56 @@ function loadData(column_id) {
         $('#formation-name').val(column.formation); 
         $('#column-name').val(column.column_id); 
         $('#description').val(column.description);
-    }); 
-    get('/api/beds', {column_id: column_id }, function (data) {
-        // data is a list of beds. sort by bed start
-        data.sort(function(a,b){return a.bed_start - b.bed_start;})
-        console.log(data);
-        // This is the same code used to add a row to the table. 
-        // There may (probably is...) a better/more efficient way to do this
-        for (var i=0; i<data.length; i++){
-            var $TABLE = $('#table');
-            var $clone = $TABLE.find('tr.hide').clone(true).removeClass('hide d-none');
-            $clone.find('select').selectpicker(); // turn a normal select into searchable, multiselect
-            $clone.addClass("d-flex")
-            $TABLE.find('table').append($clone); 
 
-            var $num = $clone.find('.number');
-            var $select = $clone.find('select');
-
-            $num.eq(0).text(data[i].bed_start); 
-            $num.eq(1).text(data[i].bed_end); 
-            $select.eq(0).val(data[i].grain_size).change(); 
-            $select.eq(1).val(data[i].features).change(); 
+        for (var i=0; i<column.lithologies.length; i++){
+            const lithID = column.lithologies[i];
+            addLith(lithID);
         }
-        // loading complete
-        $('#show-beds').removeAttr("disabled");
-        $('#show-beds').text("Show beds")
+
+        // Beds have to happen after we load lithologies 
+        get('/api/beds', {column_id: column_id }, function (data) {
+            // data is a list of beds. sort by bed start
+            data.sort(function(a,b){return a.bed_start - b.bed_start;})
+            // This is the same code used to add a row to the table. TODO: refactor to a function for both
+            // TODO: maybe a more efficient way to add many rows; this is slow
+            for (var i=0; i<data.length; i++){
+                var $TABLE = $('#table');
+                var $clone = $TABLE.find('tr.hide').clone(true).removeClass('hide d-none');
+                $clone.find('select').selectpicker(); // turn a normal select into searchable, multiselect
+                $clone.addClass("d-flex")
+                $TABLE.find('table').append($clone); 
+
+                var $num = $clone.find('.number');
+                var $select = $clone.find('select');
+
+                $num.eq(0).val(data[i].bed_start); 
+                $num.eq(1).val(data[i].bed_end); 
+                $select.eq(0).val(data[i].grain_size).change(); 
+                $select.eq(1).val(data[i].features).change(); 
+                $select.eq(2).val(data[i].lithology).change();
+            }
+            // loading complete
+            $('#show-beds').removeAttr("disabled");
+            $('#show-beds').text("Show beds")
+        }); 
     }); 
 
     // TODO load chem data 
     get('/api/chem', {column_id: column_id}, function(chemData){
-
+        for (var i=0; i<chemData.length; i++){
+            var chemtype = chemData[i].data_type;
+            onNewChem(chemtype);
+            for (var j=0; j<chemData[i].data.length; j++){
+                $('.card-header:contains("'+chemtype+'")').parents('.card').find('table').append(
+                    '<tr class="d-flex data-row">'+
+                        '<td class="col-5 chem-height number" contenteditable="true">' + chemData[i].data[j].depth +
+                        '</td><td class="col-5 chem-value number" contenteditable="true">'  + chemData[i].data[j].value +
+                        '</td><td class="col-2"><button type="button" class="table-remove btn btn-outline-danger btn-sm my-0">'+
+                        '<em class="fas fa-trash-alt"></em></button></td></tr>');
+            }
+        }
+        $('#show-chem').removeAttr("disabled");
+        $('#show-chem').text("Show chemical data")
     });  
 
     return true; 
@@ -296,9 +274,29 @@ const column_id = decodeURI(window.location.search.substring(1));
 const edited = loadData(column_id); // returns boolean 
 
 // Set up event listeners 
-document.getElementById("chem-add").addEventListener('click', onNewChem);
+document.getElementById("chem-add").addEventListener('click', function(){
+    var chemtype = $("#chem-select").val()
+    onNewChem(chemtype);
+});
+
 document.getElementById("save-col").addEventListener('click', saveColumn);
-document.getElementById("add-lith").addEventListener('click', addLith); 
+
+document.getElementById("add-lith").addEventListener('click', function(){
+    const newLith = $("#lith-input").val().trim(); 
+    addLith(newLith);
+    // clear data entry
+    $('#lith-input').val('');
+}); 
+
+$('#export').on('click', exportCsv);
+
+// Set up button for adding row 
+$('#chem-dats').on('click','.add-chem-row', addChemRow);
+
+// All table rows with a remove button... 
+$('.container-fluid').on('click', '.table-remove', function () {
+    $(this).parents('tr').detach();
+});
 
 // Button to add chemical data should be dissabled until something is selected
 $( "#chem-select" ).change(function() {
